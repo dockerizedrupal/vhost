@@ -8,7 +8,7 @@ class vhost::nginx {
 
   file { '/etc/nginx/nginx.conf':
     ensure => present,
-    source => 'puppet:///modules/nginx/etc/nginx/nginx.conf',
+    source => 'puppet:///modules/vhost/etc/nginx/nginx.conf',
     mode   => 644
   }
 }
