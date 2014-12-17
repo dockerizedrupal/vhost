@@ -1,0 +1,10 @@
+server {
+  listen 443 ssl;
+  server_name <%= @server_name %>;
+
+  location / {
+    root /nginx/data;
+
+    index index.html index.php;
+  }
+}
