@@ -1,4 +1,4 @@
-class nginx {
+class vhost {
   exec { 'apt-get clean':
     path => ['/usr/bin']
   }

@@ -1,32 +1,32 @@
-class nginx::ssl {
-  exec { 'openssl genrsa -out /nginx/ssl/private/nginxCA.key 4096':
+class vhost::ssl {
+  exec { 'openssl genrsa -out /vhost/ssl/private/vhostCA.key 4096':
     timeout => 0,
     path => ['/usr/bin']
   }
 
   $subj = "/C=/ST=/L=/O=/CN=$server_name"
 
-  exec { "openssl req -x509 -new -nodes -key /nginx/ssl/private/nginxCA.key -days 365 -subj $subj -out /nginx/ssl/certs/nginxCA.crt":
+  exec { "openssl req -x509 -new -nodes -key /vhost/ssl/private/vhostCA.key -days 365 -subj $subj -out /vhost/ssl/certs/vhostCA.crt":
     timeout => 0,
     path => ['/usr/bin'],
-    require => Exec['openssl genrsa -out /nginx/ssl/private/nginxCA.key 4096']
+    require => Exec['openssl genrsa -out /vhost/ssl/private/vhostCA.key 4096']
   }
 
-  exec { 'openssl genrsa -out /nginx/ssl/private/nginx.key 4096':
+  exec { 'openssl genrsa -out /vhost/ssl/private/vhost.key 4096':
     timeout => 0,
     path => ['/usr/bin'],
-    require => Exec["openssl req -x509 -new -nodes -key /nginx/ssl/private/nginxCA.key -days 365 -subj $subj -out /nginx/ssl/certs/nginxCA.crt"]
+    require => Exec["openssl req -x509 -new -nodes -key /vhost/ssl/private/vhostCA.key -days 365 -subj $subj -out /vhost/ssl/certs/vhostCA.crt"]
   }
 
-  exec { "openssl req -new -key /nginx/ssl/private/nginx.key -subj $subj -out /nginx/ssl/certs/nginx.csr":
+  exec { "openssl req -new -key /vhost/ssl/private/vhost.key -subj $subj -out /vhost/ssl/certs/vhost.csr":
     timeout => 0,
     path => ['/usr/bin'],
-    require => Exec['openssl genrsa -out /nginx/ssl/private/nginx.key 4096']
+    require => Exec['openssl genrsa -out /vhost/ssl/private/vhost.key 4096']
   }
 
-  exec { "openssl x509 -req -in /nginx/ssl/certs/nginx.csr -CA /nginx/ssl/certs/nginxCA.crt -CAkey /nginx/ssl/private/nginxCA.key -CAcreateserial -out /nginx/ssl/certs/nginx.crt -days 365":
+  exec { "openssl x509 -req -in /vhost/ssl/certs/vhost.csr -CA /vhost/ssl/certs/vhostCA.crt -CAkey /vhost/ssl/private/vhostCA.key -CAcreateserial -out /vhost/ssl/certs/vhost.crt -days 365":
     timeout => 0,
     path => ['/usr/bin'],
-    require => Exec["openssl req -new -key /nginx/ssl/private/nginx.key -subj $subj -out /nginx/ssl/certs/nginx.csr"]
+    require => Exec["openssl req -new -key /vhost/ssl/private/vhost.key -subj $subj -out /vhost/ssl/certs/vhost.csr"]
   }
 }

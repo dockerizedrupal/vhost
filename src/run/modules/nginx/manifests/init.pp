@@ -1,15 +1,15 @@
-class nginx {
-  require nginx::ssl
+class vhost {
+  require vhost::ssl
 
   file { '/etc/nginx/conf.d/default.conf':
     ensure => present,
-    content => template('nginx/default.conf.erb'),
+    content => template('vhost/default.conf.erb'),
     mode => 644
   }
 
   file { '/etc/nginx/conf.d/default-ssl.conf':
     ensure => present,
-    content => template('nginx/default-ssl.conf.erb'),
+    content => template('vhost/default-ssl.conf.erb'),
     mode => 644
   }
 }
