@@ -121,9 +121,6 @@ server {
     ssl_session_timeout 5m;
     ssl_session_cache shared:SSL:50m;
 
-    ssl_certificate /vhost/ssl/certs/vhost.crt;
-    ssl_certificate_key /vhost/ssl/private/vhost.key;
-
     add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
 
     location / {
