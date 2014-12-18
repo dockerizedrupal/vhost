@@ -1,14 +1,26 @@
 # docker-vhost
 
+If you are familiar with [nginx-proxy](https://github.com/jwilder/nginx-proxy) then you know
+
+A [Docker](https://docker.com/) container for [Nginx](http://nginx.org/) and docker-gen.
+
 ## Run the container
 
 Using the `docker` command:
 
+    CONTAINER="vhostdata" && sudo docker run \
+      --name "${CONTAINER}" \
+      -h "${CONTAINER}" \
+      -v /vhost/ssl/certs \
+      -v /vhost/ssl/private \
+      simpledrupalcloud/data:latest
+ 
     CONTAINER="vhost" && sudo docker run \
       --name "${CONTAINER}" \
       -h "${CONTAINER}" \
       -p 80:80 \
       -p 443:443 \
+      --volumes-from httpddata \
       -v /var/run/docker.sock:/var/run/docker.sock \
       -e SERVER_NAME="localhost" \
       -d \
