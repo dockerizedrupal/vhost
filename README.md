@@ -6,7 +6,11 @@ Using the `docker` command:
 
     CONTAINER="vhost" && sudo docker run \
       --name "${CONTAINER}" \
-      --net host \
+      -h "${CONTAINER}" \
+      -p 80:80 \
+      -p 443:443 \
+      -v /var/run/docker.sock:/var/run/docker.sock \
+      -e SERVER_NAME="localhost" \
       -d \
       simpledrupalcloud/vhost:latest
 
