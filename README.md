@@ -12,14 +12,13 @@ Using the `docker` command:
       -v /var/run/docker.sock:/var/run/docker.sock \
       -e SERVER_NAME="localhost" \
       -d \
-      simpledrupalcloud/vhost:dev
+      simpledrupalcloud/vhost:latest
 
 Using the `fig` command
 
     TMP="$(mktemp -d)" \
       && git clone http://git.simpledrupalcloud.com/simpledrupalcloud/docker-vhost.git "${TMP}" \
       && cd "${TMP}" \
-      && git checkout dev \
       && sudo fig up
 
 ## Build the image
@@ -27,8 +26,7 @@ Using the `fig` command
     TMP="$(mktemp -d)" \
       && git clone http://git.simpledrupalcloud.com/simpledrupalcloud/docker-vhost.git "${TMP}" \
       && cd "${TMP}" \
-      && git checkout dev \
-      && sudo docker build -t simpledrupalcloud/vhost:dev . \
+      && sudo docker build -t simpledrupalcloud/vhost:latest . \
       && cd -
 
 ## License
