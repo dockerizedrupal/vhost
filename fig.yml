@@ -1,5 +1,5 @@
 vhost:
-  image: simpledrupalcloud/vhost:latest
+  image: simpledrupalcloud/vhost:dev
   hostname: vhost
   ports:
     - "80:80"
