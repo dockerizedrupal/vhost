@@ -69,7 +69,7 @@ upstream {{ $host }} {
 }
 
 server {
-  server_name {{ $host }};
+  server_name {{ $host }}.viljaste.fenomen.ee;
 
   location / {
     proxy_pass http://{{ $host }};
