@@ -1,4 +1,4 @@
 class vhost {
-  require vhost::nginx::ssh
+  require vhost::nginx::ssl
   require vhost::dockergen
 }
