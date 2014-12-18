@@ -18,7 +18,7 @@ class vhost::nginx::ssl {
 
   $subj = "/C=/ST=/L=/O=/CN=*.$server_name"
 
-  exec { "openssl req -new -key /vhost/ssl/private/vhost.key -subj $subj -out /vhost/ssl/certs/vhost.csr":
+  exec { "openssl req -sha256 -new -key /vhost/ssl/private/vhost.key -subj $subj -out /vhost/ssl/certs/vhost.csr":
     timeout => 0,
     path => ['/usr/bin'],
     require => Exec['openssl genrsa -out /vhost/ssl/private/vhost.key 4096']
@@ -27,6 +27,6 @@ class vhost::nginx::ssl {
   exec { "openssl x509 -req -in /vhost/ssl/certs/vhost.csr -CA /vhost/ssl/certs/vhostCA.crt -CAkey /vhost/ssl/private/vhostCA.key -CAcreateserial -out /vhost/ssl/certs/vhost.crt -days 365":
     timeout => 0,
     path => ['/usr/bin'],
-    require => Exec["openssl req -new -key /vhost/ssl/private/vhost.key -subj $subj -out /vhost/ssl/certs/vhost.csr"]
+    require => Exec["openssl req -sha256 -new -key /vhost/ssl/private/vhost.key -subj $subj -out /vhost/ssl/certs/vhost.csr"]
   }
 }
