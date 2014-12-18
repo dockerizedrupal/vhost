@@ -52,7 +52,7 @@ server {
            # {{$container.Name}}
            server {{ $address.IP }}:{{ $address.Port }};
         {{ end }}
-      {{/* If more than one port exposed, use the one matching VIRTUAL_PORT env var */}}
+      {{/* If more than one port exposed, use the one matching VHOST_PORT env var */}}
       {{ else if $container.Env.VHOST_PORT }}
         {{ range $address := .Addresses }}
            {{ if eq $address.Port $container.Env.VHOST_PORT }}
@@ -64,6 +64,35 @@ server {
       {{ else }}
         {{ range $address := $container.Addresses }}
           {{ if eq $address.Port "80" }}
+          # {{$container.Name}}
+          server {{ $address.IP }}:{{ $address.Port }};
+          {{ end }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  }
+
+  upstream {{ $host }}_ssl {
+    {{ range $container := $containers }}
+      {{ $addrLen := len $container.Addresses }}
+      {{/* If only 1 port exposed, use that */}}
+      {{ if eq $addrLen 1 }}
+        {{ with $address := index $container.Addresses 0 }}
+           # {{$container.Name}}
+           server {{ $address.IP }}:{{ $address.Port }};
+        {{ end }}
+      {{/* If more than one port exposed, use the one matching VHOST_PORT_SSL env var */}}
+      {{ else if $container.Env.VHOST_PORT_SSL }}
+        {{ range $address := .Addresses }}
+           {{ if eq $address.Port $container.Env.VHOST_PORT_SSL }}
+           # {{$container.Name}}
+           server {{ $address.IP }}:{{ $address.Port }};
+           {{ end }}
+        {{ end }}
+      {{/* Else default to standard web port 443 */}}
+      {{ else }}
+        {{ range $address := $container.Addresses }}
+          {{ if eq $address.Port "443" }}
           # {{$container.Name}}
           server {{ $address.IP }}:{{ $address.Port }};
           {{ end }}
@@ -98,7 +127,7 @@ server {
     add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
 
     location / {
-      proxy_pass http://{{ $host }};
+      proxy_pass http://{{ $host }}_ssl;
     }
   }
 {{ end }}
