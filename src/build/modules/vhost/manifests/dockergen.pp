@@ -11,9 +11,4 @@ class vhost::dockergen {
     path => ['/bin'],
     require => File['/tmp/docker-gen-linux-amd64-0.3.6.tar.gz']
   }
-
-  file { '/root/nginx.tmpl':
-    ensure => present,
-    source => 'puppet:///modules/vhost/root/nginx.tmpl'
-  }
 }
