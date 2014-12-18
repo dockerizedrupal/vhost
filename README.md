@@ -20,7 +20,7 @@ Using the `docker` command:
       -h "${CONTAINER}" \
       -p 80:80 \
       -p 443:443 \
-      --volumes-from httpddata \
+      --volumes-from vhostdata \
       -v /var/run/docker.sock:/var/run/docker.sock \
       -e SERVER_NAME="localhost" \
       -d \
