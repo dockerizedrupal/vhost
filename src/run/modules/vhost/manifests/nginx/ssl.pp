@@ -4,7 +4,7 @@ class vhost::nginx::ssl {
     path => ['/usr/bin']
   }
 
-  $subj = "/C=/ST=/L=/O=/CN=$server_name"
+  $subj = "/C=/ST=/L=/O=/CN=*.$server_name"
 
   exec { "openssl req -x509 -new -nodes -key /vhost/ssl/private/vhostCA.key -days 365 -subj $subj -out /vhost/ssl/certs/vhostCA.crt":
     timeout => 0,
