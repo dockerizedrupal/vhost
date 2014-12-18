@@ -32,43 +32,17 @@ server {
 
 {{ range $host, $containers := groupByMulti $ "Env.VHOST" "," }}
   {{ range $container := $containers }}
-    {{ if $container.Env.VHOST_PORT }}
-      {{ range $address := .Addresses }}
-        {{ if eq $address.Port $container.Env.VHOST_PORT }}
-          upstream {{ $host }} {
-             # {{$container.Name}}
-             server {{ $address.IP }}:{{ $address.Port }};
-          }
-        {{ end }}
-      {{ end }}
-    {{ else }}
-      {{ range $address := $container.Addresses }}
-        {{ if eq $address.Port "80" }}
-          upstream {{ $host }} {
-             # {{$container.Name}}
-             server {{ $address.IP }}:{{ $address.Port }};
-          }
-        {{ end }}
-      {{ end }}
-    {{ end }}
-
-    {{ if $container.Env.VHOST_PORT_SSL }}
-      {{ range $address := .Addresses }}
-         {{ if eq $address.Port $container.Env.VHOST_PORT_SSL }}
-          upstream {{ $host }}_ssl {
-             # {{$container.Name}}
-             server {{ $address.IP }}:{{ $address.Port }};
-          }
-         {{ end }}
-      {{ end }}
-    {{ else }}
-      {{ range $address := $container.Addresses }}
-        {{ if eq $address.Port "443" }}
-          upstream {{ $host }}_ssl {
-             # {{$container.Name}}
-             server {{ $address.IP }}:{{ $address.Port }};
-          }
-        {{ end }}
+    {{ range $address := $container.Addresses }}
+      {{ if eq $address.Port "80" }}
+        upstream {{ $host }} {
+           # {{$container.Name}}
+           server {{ $address.IP }}:{{ $address.Port }};
+        }
+      {{ else if eq $address.Port "443" }}
+        upstream {{ $host }}_ssl {
+           # {{$container.Name}}
+           server {{ $address.IP }}:{{ $address.Port }};
+        }
       {{ end }}
     {{ end }}
   {{ end }}
