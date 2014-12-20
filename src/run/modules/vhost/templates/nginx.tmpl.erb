@@ -35,7 +35,7 @@ server {
     {{ range $address := $container.Addresses }}
       {{ if eq $address.Port "80" }}
         upstream {{ $host }} {
-           # {{$container.Name}}
+           # {{ $container.Name }}
            server {{ $address.IP }}:{{ $address.Port }};
         }
 
