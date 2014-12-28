@@ -1,7 +1,7 @@
 class vhost::dockergen {
-  file { '/root/nginx.conf.tmpl':
+  file { '/root/vhost.conf.tmpl':
     ensure => present,
-    content => template('vhost/nginx.conf.tmpl.erb')
+    content => template('vhost/vhost.conf.tmpl.erb')
   }
 
   file { '/root/vhost.html.tmpl':
