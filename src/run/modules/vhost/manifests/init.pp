@@ -16,4 +16,8 @@ class vhost {
     content => template('vhost/default-ssl.conf.erb'),
     mode => 644
   }
+
+  exec { 'chown -R nginx.nginx /vhost/data':
+    path => ['/bin']
+  }
 }

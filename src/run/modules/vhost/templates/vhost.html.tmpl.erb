@@ -7,5 +7,16 @@
   </head>
   <body>
     <h1><%= @server_name %></h1>
+    {{ range $host, $containers := groupByMulti $ "Env.VHOST" "," }}
+      {{ range $container := $containers }}
+        {{ range $address := $container.Addresses }}
+          {{ if eq $address.Port "80" }}
+            <a href="http://{{ $host }}.<%= @server_name %>">http://{{ $host }}.<%= @server_name %> [{{ $container.Name }}]</a>
+          {{ else if eq $address.Port "443" }}
+            <a href="https://{{ $host }}.<%= @server_name %>">http://{{ $host }}.<%= @server_name %> [{{ $container.Name }}]</a>
+          {{ end }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
   </body>
 </html>
