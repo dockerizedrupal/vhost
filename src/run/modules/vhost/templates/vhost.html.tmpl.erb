@@ -10,11 +10,14 @@
     {{ range $host, $containers := groupByMulti $ "Env.VHOST" "," }}
       {{ range $container := $containers }}
         {{ range $address := $container.Addresses }}
-          {{ if eq $address.Port "80" }}
-            <a href="http://{{ $host }}.<%= @server_name %>">http://{{ $host }}.<%= @server_name %> [{{ $container.Name }}]</a>
-          {{ else if eq $address.Port "443" }}
-            <a href="https://{{ $host }}.<%= @server_name %>">http://{{ $host }}.<%= @server_name %> [{{ $container.Name }}]</a>
-          {{ end }}
+          <h2>{{ $container.Name }}</h2>
+          <ul>
+            {{ if eq $address.Port "80" }}
+              <li><a href="http://{{ $host }}.<%= @server_name %>">http://{{ $host }}.<%= @server_name %></a></li>
+            {{ else if eq $address.Port "443" }}
+              <li><a href="https://{{ $host }}.<%= @server_name %>">http://{{ $host }}.<%= @server_name %></a></li>
+            {{ end }}
+          </ul>
         {{ end }}
       {{ end }}
     {{ end }}
