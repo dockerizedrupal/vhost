@@ -1,8 +1,11 @@
 class vhost {
   require vhost::nginx
+  require vhost::php
   require vhost::dockergen
 
-  exec { 'mkdir -p /vhost/data':
-    path => ['/bin']
+  file { '/vhost/data/index.php':
+    ensure => present,
+    source => 'puppet:///modules/vhost/vhost/data/index.php',
+    mode   => 755
   }
 }
