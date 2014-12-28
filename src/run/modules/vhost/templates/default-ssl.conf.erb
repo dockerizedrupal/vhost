@@ -1,0 +1,10 @@
+server {
+  listen 443 ssl;
+  server_name vhost.<%= @server_name %>;
+
+  location / {
+    root /vhost/data;
+
+    index index.html;
+  }
+}

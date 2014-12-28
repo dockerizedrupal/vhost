@@ -1,0 +1,10 @@
+server {
+  listen 80;
+  server_name vhost.<%= @server_name %>;
+
+  location / {
+    root /vhost/data;
+
+    index index.html;
+  }
+}
