@@ -1,0 +1,15 @@
+<?php
+
+$vhost = array();
+
+{{ range $host, $containers := groupByMulti $ "Env.VHOST" "," }}
+  {{ range $container := $containers }}
+    {{ range $address := $container.Addresses }}
+      {{ if eq $address.Port "80" }}
+        $vhost['{{ $container.Name }}'][] = 'http://{{ $host }}.<%= @server_name %>';
+      {{ else if eq $address.Port "443" }}
+        $vhost['{{ $container.Name }}'][] = 'https://{{ $host }}.<%= @server_name %>';
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
