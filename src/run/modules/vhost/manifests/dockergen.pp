@@ -4,8 +4,8 @@ class vhost::dockergen {
     content => template('vhost/vhost.conf.tmpl.erb')
   }
 
-  file { '/root/vhost.html.tmpl':
+  file { '/root/vhost.php.tmpl':
     ensure => present,
-    content => template('vhost/vhost.html.tmpl.erb')
+    content => template('vhost/vhost.php.tmpl.erb')
   }
 }
