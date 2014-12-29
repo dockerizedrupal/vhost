@@ -44,10 +44,13 @@ Using the `fig` command
     SERVER_NAME="localhost"
 
     TMP="$(mktemp -d)" \
-      && http://git.simpledrupalcloud.com/simpledrupalcloud/docker-vhost.git "${TMP}" \
-      && sudo cp "${TMP}/fig.yml" /opt/vhost.yml \
+      && git clone http://git.simpledrupalcloud.com/simpledrupalcloud/docker-vhost.git "${TMP}" \
+      && cd "${TMP}" \
+      && git checkout dev \
+      && sudo cp ./fig.yml /opt/vhost.yml \
       && sudo sed -i "s/localhost/${SERVER_NAME}/g" /opt/vhost.yml \
-      && sudo cp "${TMP}/vhost.conf" /etc/init/vhost.conf
+      && sudo cp ./vhost.conf /etc/init/vhost.conf \
+      && cd -
 
 ## License
 
