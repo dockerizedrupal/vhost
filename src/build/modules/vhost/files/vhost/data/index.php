@@ -12,9 +12,9 @@ ksort($vhost);
   </head>
   <body>
   <?php foreach ($vhost as $container_name => $links): ?>
+    <?php ksort($links); ?>
     <h2><?php print $container_name; ?></h2>
     <?php foreach ($links as $link): ?>
-    <?php ksort($link); ?>
       <p><a href="<?php print $link; ?>"><?php print $link; ?></a></p>
     <?php endforeach; ?>
   <?php endforeach; ?>
