@@ -1,3 +1,8 @@
+<?php
+require_once './vhost.php';
+
+ksort($vhost);
+?>
 <!DOCTYPE html>
 
 <html>
