@@ -3,12 +3,24 @@
 $vhost = array();
 
 {{ range $host, $containers := groupByMulti $ "Env.VHOST" "," }}
+  $host = '{{ $host }}';
+  $host = explode('.', $host);
+  $host = array_pop($host);
+
+  if (!isset($vhost[$host])) {
+    $vhost[$host] = array();
+  }
+
   {{ range $container := $containers }}
+    if (!isset($vhost[$host]['{{ $container.Image.Repository }}'])) {
+      $vhost[$host]['{{ $container.Image.Repository }}'] = array();
+    }
+
     {{ range $address := $container.Addresses }}
       {{ if eq $address.Port "80" }}
-        $vhost['{{ $container.Name }}'][{{ $address.Port }}] = 'http://{{ $host }}.<%= @server_name %>';
+        $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'http://{{ $host }}.<%= @server_name %>';
       {{ else if eq $address.Port "443" }}
-        $vhost['{{ $container.Name }}'][{{ $address.Port }}] = 'https://{{ $host }}.<%= @server_name %>';
+        $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'https://{{ $host }}.<%= @server_name %>';
       {{ end }}
     {{ end }}
   {{ end }}
