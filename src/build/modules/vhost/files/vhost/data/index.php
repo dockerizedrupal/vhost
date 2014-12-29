@@ -9,6 +9,11 @@ ksort($vhost);
   <head>
     <meta charset="utf-8">
     <title>vhost</title>
+    <style>
+      body {
+        text-align: center;
+      }
+    </style>
   </head>
   <body>
   <?php foreach ($vhost as $container_name => $links): ?>
