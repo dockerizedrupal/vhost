@@ -1,5 +1,22 @@
 <?php
-
 require_once './vhost.php';
 
-print_r($vhost);
+ksort($vhost);
+?>
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>vhost</title>
+  </head>
+  <body>
+  <?php foreach ($vhost as $container_name => $links): ?>
+    <h2><?php print $container_name; ?></h2>
+    <?php foreach ($links as $link): ?>
+    <?php ksort($link); ?>
+      <p><a href="<?php print $link; ?>"><?php print $link; ?></a></p>
+    <?php endforeach; ?>
+  <?php endforeach; ?>
+  </body>
+</html>
