@@ -4,7 +4,15 @@ vhost:
   ports:
     - "80:80"
     - "443:443"
+  volumes_from:
+    - vhostdata
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
   environment:
     - SERVER_NAME=localhost
+vhostdata:
+  image: simpledrupalcloud/data:dev
+  hostname: vhostdata
+  volumes:
+    - /vhost/ssl/certs
+    - /vhost/ssl/private
