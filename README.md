@@ -1,9 +1,5 @@
 # docker-vhost
 
-If you are familiar with [nginx-proxy](https://github.com/jwilder/nginx-proxy) then you know
-
-A [Docker](https://docker.com/) container for [Nginx](http://nginx.org/) and docker-gen.
-
 ## Run the container
 
 Using the `docker` command:
