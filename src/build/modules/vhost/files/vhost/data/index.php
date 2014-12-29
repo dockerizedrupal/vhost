@@ -15,7 +15,7 @@ ksort($vhost);
     <?php ksort($links); ?>
     <h2><?php print $container_name; ?></h2>
     <?php foreach ($links as $link): ?>
-      <p><a href="<?php print $link; ?>"><?php print $link; ?></a></p>
+      <p><a href="<?php print $link; ?>" target="_blank"><?php print $link; ?></a></p>
     <?php endforeach; ?>
   <?php endforeach; ?>
   </body>
