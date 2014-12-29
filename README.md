@@ -44,7 +44,6 @@ Using the `fig` command
     TMP="$(mktemp -d)" \
       && git clone http://git.simpledrupalcloud.com/simpledrupalcloud/docker-vhost.git "${TMP}" \
       && cd "${TMP}" \
-      && git checkout dev \
       && sudo cp ./fig.yml /opt/vhost.yml \
       && sudo sed -i "s/localhost/${SERVER_NAME}/g" /opt/vhost.yml \
       && sudo cp ./vhost.conf /etc/init/vhost.conf \
