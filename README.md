@@ -39,6 +39,16 @@ Using the `fig` command
       && sudo docker build -t simpledrupalcloud/vhost:dev . \
       && cd -
 
+## Start the container automatically
+
+    SERVER_NAME="localhost"
+
+    TMP="$(mktemp -d)" \
+      && http://git.simpledrupalcloud.com/simpledrupalcloud/docker-vhost.git "${TMP}" \
+      && sudo cp "${TMP}/fig.yml" /opt/vhost.yml \
+      && sudo sed -i "s/localhost/${SERVER_NAME}/g" /opt/vhost.yml \
+      && sudo cp "${TMP}/vhost.conf" /etc/init/vhost.conf
+
 ## License
 
 **MIT**
