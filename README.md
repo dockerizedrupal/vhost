@@ -4,11 +4,19 @@
 
 Using the `docker` command:
 
+    CONTAINER="vhostdata" && sudo docker run \
+      --name "${CONTAINER}" \
+      -h "${CONTAINER}" \
+      -v /vhost/ssl/certs \
+      -v /vhost/ssl/private \
+      simpledrupalcloud/data:dev
+ 
     CONTAINER="vhost" && sudo docker run \
       --name "${CONTAINER}" \
       -h "${CONTAINER}" \
       -p 80:80 \
       -p 443:443 \
+      --volumes-from vhostdata \
       -v /var/run/docker.sock:/var/run/docker.sock \
       -e SERVER_NAME="localhost" \
       -d \
