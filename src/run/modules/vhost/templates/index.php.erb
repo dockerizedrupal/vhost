@@ -12,6 +12,7 @@ ksort($vhost);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>vhost</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -19,12 +20,15 @@ ksort($vhost);
   </head>
   <body>
     <div class="container">
+      <div class="row">
+        <div class="well well-sm"><%= @server_name %></div>
+      </div>
       <?php foreach ($vhost as $host => $containers): ?>
         <?php ksort($containers); ?>
         <div class="row">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h3 class="panel-title"><?php print $host; ?></h3>
+              <h2 class="panel-title"><?php print $host; ?></h2>
             </div>
             <table class="table">
               <tbody>
