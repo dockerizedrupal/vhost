@@ -3,9 +3,11 @@ class vhost {
   require vhost::php
   require vhost::dockergen
 
-  file { '/vhost/data/index.php':
-    ensure => present,
-    source => 'puppet:///modules/vhost/vhost/data/index.php',
-    mode   => 755
+  file { '/vhost/data':
+    ensure => directory,
+    recurse => true,
+    purge => true,
+    force => true,
+    source => 'puppet:///modules/vhost/vhost/data',
   }
 }
