@@ -4,12 +4,22 @@ body {
 }
 
 h1 {
-  margin-top: 10px;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.panel-title {
+  font-weight: bold;
+}
+
+.list-group {
+  margin-bottom: 0;
 }
 
 .column-1 {
   width: 15%;
   text-align: left;
+  vertical-align: middle;
 }
 
 .column-2 {
