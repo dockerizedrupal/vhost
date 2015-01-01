@@ -2,6 +2,15 @@
 require_once './vhost.php';
 
 ksort($vhost);
+
+foreach ($vhost as $host => &$containers) {
+  ksort($containers);
+
+  foreach ($containers as $container => &$links) {
+    ksort($links);
+  }
+}
+
 ?>
 <!DOCTYPE html>
 
@@ -10,7 +19,7 @@ ksort($vhost);
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>vhost</title>
+    <title>vhost - <%= @server_name %></title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <!--[if lt IE 9]>
@@ -21,10 +30,11 @@ ksort($vhost);
   <body>
     <div class="container">
       <div class="row">
-        <div class="well well-sm"><%= @server_name %></div>
+        <div class="well well-sm">
+          <h1><%= @server_name %></h1>
+        </div>
       </div>
       <?php foreach ($vhost as $host => $containers): ?>
-        <?php ksort($containers); ?>
         <div class="row">
           <div class="panel panel-default">
             <div class="panel-heading">
@@ -33,7 +43,6 @@ ksort($vhost);
             <table class="table">
               <tbody>
                 <?php foreach ($containers as $container => $links): ?>
-                <?php ksort($links); ?>
                 <tr>
                   <td class="column-1"><?php print $container; ?></td>
                   <td class="column-2">
