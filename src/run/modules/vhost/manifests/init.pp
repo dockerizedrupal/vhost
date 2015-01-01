@@ -17,6 +17,12 @@ class vhost {
     mode => 644
   }
 
+  file { '/vhost/data/index.php':
+    ensure => present,
+    content => template('vhost/index.php.erb'),
+    mode => 755
+  }
+
   exec { 'chown -R nginx.nginx /vhost/data':
     path => ['/bin']
   }
