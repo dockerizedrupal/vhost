@@ -1,3 +1,11 @@
 body {
   padding: 20px 0;
 }
+
+.column-1 {
+  width: 10%;
+}
+
+.column-2 {
+  width: 90%;
+}
