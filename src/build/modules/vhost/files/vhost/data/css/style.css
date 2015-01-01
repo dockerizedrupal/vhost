@@ -19,6 +19,9 @@ h1 {
 .column-1 {
   width: 15%;
   text-align: left;
+}
+
+.table > tbody > tr > td.column-1 {
   vertical-align: middle;
 }
 
