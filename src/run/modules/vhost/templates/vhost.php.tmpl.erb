@@ -2,10 +2,8 @@
 
 $vhost = array();
 
-{{ range $host, $containers := groupByMulti $ "Env.VHOST" "," }}
-  $host = '{{ $host }}';
-  $host = explode('.', $host);
-  $host = array_pop($host);
+{{ range $vhost, $containers := groupByMulti $ "Env.VHOST" "," }}
+  $host = '{{ $vhost }}';
 
   if (!isset($vhost[$host])) {
     $vhost[$host] = array();
@@ -18,9 +16,31 @@ $vhost = array();
 
     {{ range $address := $container.Addresses }}
       {{ if eq $address.Port "80" }}
-        $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'http://{{ $host }}.<%= @server_name %>';
+        $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'http://{{ $container.Image.Repository }}.{{ $vhost }}.<%= @server_name %>';
       {{ else if eq $address.Port "443" }}
-        $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'https://{{ $host }}.<%= @server_name %>';
+        $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'https://{{ $container.Image.Repository }}.{{ $vhost }}.<%= @server_name %>';
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ range $vhost_alias, $containers := groupByMulti $ "Env.VHOST_ALIAS" "," }}
+  $host = '{{ $vhost_alias }}';
+
+  if (!isset($vhost[$host])) {
+    $vhost[$host] = array();
+  }
+
+  {{ range $container := $containers }}
+    if (!isset($vhost[$host]['{{ $container.Image.Repository }}'])) {
+      $vhost[$host]['{{ $container.Image.Repository }}'] = array();
+    }
+
+    {{ range $address := $container.Addresses }}
+      {{ if eq $address.Port "80" }}
+        $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'http://{{ $vhost_alias }}';
+      {{ else if eq $address.Port "443" }}
+        $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'https://{{ $vhost_alias }}';
       {{ end }}
     {{ end }}
   {{ end }}
