@@ -16,6 +16,31 @@ foreach ($vhost as $host => $containers) {
   }
 }
 
+function httpd_link_get($group) {
+  $httpd_link = NULL;
+
+  foreach ($vhost as $host => $containers) {
+    if ($host == $group) {
+      foreach ($containers as $container => $links) {
+        if ($container == 'httpd') {
+          if (count($links) > 1) {
+            $httpd_link = $links[80];
+          }
+          else {
+            $httpd_link = array_shift($links);
+          }
+
+          break;
+        }
+      }
+
+      break;
+    }
+  }
+
+  return $httpd_link;
+}
+
 ?>
 <!DOCTYPE html>
 
@@ -42,7 +67,13 @@ foreach ($vhost as $host => $containers) {
           <div class="row">
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h2 class="panel-title"><?php print $host; ?></h2>
+                <?php if (($httpd_link = httpd_link_get('httpd'))): ?>
+                  <h2 class="panel-title">
+                    <a href="<?php print $httpd_link; ?>"><?php print $host; ?></a>
+                  </h2>
+                <?php else: ?>
+                  <h2 class="panel-title"><?php print $host; ?></h2>
+                <?php endif; ?>
               </div>
               <table class="table">
                 <tbody>
