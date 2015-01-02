@@ -1,3 +1,7 @@
-setInterval(function() {
-  location.reload();
-}, 1000);
+(function($) {
+  $(function() {
+    setInterval(function() {
+      $('body').load(location.href + ' body');
+    }, 1000);
+  });
+})(jQuery);
