@@ -1,7 +1,7 @@
 (function($) {
   $(function() {
     setInterval(function() {
-      $('body').load(location.href + ' body');
+      $('#page').load(location.href + ' #page');
     }, 1000);
   });
 })(jQuery);
