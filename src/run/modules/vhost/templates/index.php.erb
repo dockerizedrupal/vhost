@@ -43,6 +43,33 @@ function httpd_link_get($group) {
   return $httpd_link;
 }
 
+function logs_link_get($group) {
+  global $vhost;
+
+  $logs_link = NULL;
+
+  foreach ($vhost as $host => $containers) {
+    if ($host == $group) {
+      foreach ($containers as $container => $links) {
+        if ($container == 'logs') {
+          if (count($links) > 1) {
+            $logs_link = $links[80];
+          }
+          else {
+            $logs_link = array_shift($links);
+          }
+
+          break;
+        }
+      }
+
+      break;
+    }
+  }
+
+  return $logs_link;
+}
+
 ?>
 <!DOCTYPE html>
 
@@ -69,9 +96,9 @@ function httpd_link_get($group) {
           <div class="row">
             <div class="panel panel-default">
               <div class="panel-heading">
-                <?php if (($httpd_link = httpd_link_get($host))): ?>
+                <?php if (($link = httpd_link_get($host)) || ($link = logs_link_get($host))): ?>
                   <h2 class="panel-title">
-                    <a href="<?php print $httpd_link; ?>" target="_blank"><?php print $host; ?></a><span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                    <a href="<?php print $link; ?>" target="_blank"><?php print $host; ?></a><span class="glyphicon glyphicon-link" aria-hidden="true"></span>
                   </h2>
                 <?php else: ?>
                   <h2 class="panel-title"><?php print $host; ?></h2>
