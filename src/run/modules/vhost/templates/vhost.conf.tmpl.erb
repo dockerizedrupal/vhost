@@ -36,7 +36,7 @@ server {
   {{ range $container := $containers }}
     {{ range $address := $container.Addresses }}
       {{ if eq $address.Port "80" }}
-        {{ if eq $container.Image.Repository "httpd" }}
+        {{ if or (eq $container.Image.Repository "httpd") (eq $container.Image.Repository "logs") }}
           upstream {{ $vhost }} {
              server {{ $address.IP }}:{{ $address.Port }};
           }
@@ -64,7 +64,7 @@ server {
           }
         {{ end }}
       {{ else if eq $address.Port "443" }}
-        {{ if eq $container.Image.Repository "httpd" }}
+        {{ if or (eq $container.Image.Repository "httpd") (eq $container.Image.Repository "logs") }}
           upstream {{ $vhost }}.ssl {
              server {{ $address.IP }}:{{ $address.Port }};
           }

@@ -16,13 +16,13 @@ $vhost = array();
 
     {{ range $address := $container.Addresses }}
       {{ if eq $address.Port "80" }}
-        {{ if eq $container.Image.Repository "httpd" }}
+        {{ if or (eq $container.Image.Repository "httpd") (eq $container.Image.Repository "logs") }}
           $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'http://{{ $vhost }}.<%= @server_name %>';
         {{ else }}
           $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'http://{{ $container.Image.Repository }}.{{ $vhost }}.<%= @server_name %>';
         {{ end }}
       {{ else if eq $address.Port "443" }}
-        {{ if eq $container.Image.Repository "httpd" }}
+        {{ if or (eq $container.Image.Repository "httpd") (eq $container.Image.Repository "logs") }}
           $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'https://{{ $vhost }}.<%= @server_name %>';
         {{ else }}
           $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'https://{{ $container.Image.Repository }}.{{ $vhost }}.<%= @server_name %>';
