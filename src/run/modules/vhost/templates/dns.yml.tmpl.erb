@@ -1,0 +1,22 @@
+{{ range $vhost, $containers := groupByMulti $ "Env.VHOST" "," }}
+  {{ range $container := $containers }}
+    {{ range $address := $container.Addresses }}
+      {{ if or (eq $address.Port "80") (eq $address.Port "443") }}
+        {{ if or (eq $container.Image.Repository "httpd") (eq $container.Image.Repository "logs") }}
+{{ $vhost }}.<%= @server_name %>: <%= @host_ip %>
+        {{ else }}
+{{ $container.Image.Repository }}.{{ $vhost }}.<%= @server_name %>: <%= @host_ip %>
+        {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ range $vhost_alias, $containers := groupByMulti $ "Env.VHOST_ALIAS" "," }}
+  {{ range $container := $containers }}
+    {{ range $address := $container.Addresses }}
+      {{ if or (eq $address.Port "80") (eq $address.Port "443") }}
+{{ $vhost_alias }}: <%= @host_ip %>
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}

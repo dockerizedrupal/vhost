@@ -8,4 +8,9 @@ class vhost::dockergen {
     ensure => present,
     content => template('vhost/vhost.php.tmpl.erb')
   }
+
+  file { '/root/dns.yml.tmpl':
+    ensure => present,
+    content => template('vhost/dns.yml.tmpl.erb')
+  }
 }
