@@ -2,6 +2,7 @@ class vhost {
   require vhost::nginx
   require vhost::php
   require vhost::dockergen
+  require vhost::dns
 
   file { '/vhost/data':
     ensure => directory,
