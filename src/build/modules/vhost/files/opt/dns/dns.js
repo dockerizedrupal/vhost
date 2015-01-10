@@ -31,4 +31,4 @@ server.on('query', function(query) {
   }
 });
 
-server.listen(53, '127.0.0.1');
+server.listen(53);
