@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var fs = require('fs');
+var path = require('path');
 
 var named = require('node-named');
 var yaml = require('js-yaml');
