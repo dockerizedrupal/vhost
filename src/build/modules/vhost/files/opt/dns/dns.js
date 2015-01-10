@@ -13,7 +13,7 @@ server.on('query', function(query) {
   switch (query.type()) {
     case 'A':
       try {
-        var data = yaml.safeLoad(fs.readFileSync('dns.yml', 'utf8'));
+        var data = yaml.safeLoad(fs.readFileSync(path.resolve(__dirname, 'dns.yml'), 'utf8'));
 
         if (data[domain]) {
           query.addAnswer(domain, new named.ARecord(data[domain]), 1);
