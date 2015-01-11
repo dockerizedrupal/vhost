@@ -1,7 +1,0 @@
-{
-  "name": "dns",
-  "dependencies": {
-    "js-yaml": "^3.2.5",
-    "node-named": "0.0.1"
-  }
-}
