@@ -17,6 +17,5 @@ VOLUME ["/vhost/ssl/private"]
 
 EXPOSE 80
 EXPOSE 443
-EXPOSE 53/udp
 
 CMD ["/src/run.sh"]
