@@ -8,6 +8,8 @@ class vhost {
     recurse => true,
     purge => true,
     force => true,
+    owner => nginx,
+    group => nginx,
     source => 'puppet:///modules/vhost/vhost/data'
   }
 }
