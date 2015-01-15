@@ -2,7 +2,7 @@
 
 [Nginx](http://nginx.org/) proxy that displays all the running [Docker](https://www.docker.com/) containers on your host machine on a single page, heavily influenced by [nginx-proxy](https://github.com/jwilder/nginx-proxy).
 
-![example.org](/example.org.png)
+![example](/example.png)
 
 ## Run the container
 
