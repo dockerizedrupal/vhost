@@ -20,10 +20,8 @@ class vhost {
   file { '/vhost/data/index.php':
     ensure => present,
     content => template('vhost/index.php.erb'),
+    owner => nginx,
+    group => nginx,
     mode => 755
-  }
-
-  exec { 'chown -R nginx.nginx /vhost/data':
-    path => ['/bin']
   }
 }
