@@ -107,18 +107,18 @@ function logs_link_get($group) {
               <table class="table">
                 <tbody>
                   <?php foreach ($containers as $container => $links): ?>
-                  <tr>
-                    <td class="column-1"><?php print $container; ?></td>
-                    <td class="column-2">
-                      <ul class="list-group">
-                        <?php foreach ($links as $link): ?>
-                          <li class="list-group-item">
-                            <a href="<?php print $link; ?>" target="_blank"><?php print $link; ?></a>
-                          </li>
-                        <?php endforeach; ?>
-                      </ul>
-                    </td>
-                  </tr>
+                    <tr>
+                      <td class="column-1"><?php print $container; ?></td>
+                      <td class="column-2">
+                        <ul class="list-group">
+                          <?php foreach ($links as $link): ?>
+                            <li class="list-group-item">
+                              <a href="<?php print $link; ?>" target="_blank"><?php print $link; ?></a>
+                            </li>
+                          <?php endforeach; ?>
+                        </ul>
+                      </td>
+                    </tr>
                   <?php endforeach; ?>
                 </tbody>
               </table>
