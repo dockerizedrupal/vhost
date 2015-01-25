@@ -11,8 +11,7 @@ Using the `docker` command:
     CONTAINER="vhostdata" && sudo docker run \
       --name "${CONTAINER}" \
       -h "${CONTAINER}" \
-      -v /vhost/ssl/certs \
-      -v /vhost/ssl/private \
+      -v /vhost \
       simpledrupalcloud/data:dev
  
     CONTAINER="vhost" && sudo docker run \
