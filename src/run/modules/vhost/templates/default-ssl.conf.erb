@@ -13,6 +13,8 @@ server {
   location ~ \.php$ {
     try_files $uri =404;
 
+    include fastcgi_params;
+
     fastcgi_split_path_info ^(.+\.php)(/.+)$;
 
     fastcgi_pass unix:/var/run/php5-fpm.sock;
@@ -23,7 +25,5 @@ server {
     fastcgi_param DOCUMENT_ROOT $document_root;
 
     fastcgi_intercept_errors on;
-
-    include fastcgi_params;
   }
 }
