@@ -14,5 +14,4 @@ vhostdata:
   image: simpledrupalcloud/data:latest
   hostname: vhostdata
   volumes:
-    - /vhost/ssl/certs
-    - /vhost/ssl/private
+    - /vhost

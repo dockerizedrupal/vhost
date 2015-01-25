@@ -1,10 +1,31 @@
 class vhost::nginx::ssl {
-  exec { 'openssl genrsa -out /vhost/ssl/private/vhostCA.key 4096':
-    timeout => 0,
-    path => ['/usr/bin']
+  exec { 'mkdir -p /vhost/ssl':
+    path => ['/bin']
   }
 
-  exec { "openssl req -x509 -new -nodes -key /vhost/ssl/private/vhostCA.key -days 365 -subj /C=/ST=/L=/O=/CN=vhost -out /vhost/ssl/certs/vhostCA.crt":
+  exec { 'mkdir -p /vhost/ssl/private':
+    path => ['/bin'],
+    require => Exec['mkdir -p /vhost/ssl']
+  }
+
+  exec { 'mkdir -p /vhost/ssl/certs':
+    path => ['/bin'],
+    require => Exec['mkdir -p /vhost/ssl/private']
+  }
+
+  file { '/root/opensslCA.cnf':
+    ensure => present,
+    content => template('vhost/opensslCA.cnf.erb'),
+    require => Exec['mkdir -p /vhost/ssl/certs']
+  }
+
+  exec { 'openssl genrsa -out /vhost/ssl/private/vhostCA.key 4096':
+    timeout => 0,
+    path => ['/usr/bin'],
+    require => File['/root/opensslCA.cnf']
+  }
+
+  exec { "openssl req -sha256 -x509 -new -days 3650 -extensions v3_ca -config /root/opensslCA.cnf -key /vhost/ssl/private/vhostCA.key -out /vhost/ssl/certs/vhostCA.crt":
     timeout => 0,
     path => ['/usr/bin'],
     require => Exec['openssl genrsa -out /vhost/ssl/private/vhostCA.key 4096']
@@ -13,20 +34,24 @@ class vhost::nginx::ssl {
   exec { 'openssl genrsa -out /vhost/ssl/private/vhost.key 4096':
     timeout => 0,
     path => ['/usr/bin'],
-    require => Exec["openssl req -x509 -new -nodes -key /vhost/ssl/private/vhostCA.key -days 365 -subj /C=/ST=/L=/O=/CN=vhost -out /vhost/ssl/certs/vhostCA.crt"]
+    require => Exec["openssl req -sha256 -x509 -new -days 3650 -extensions v3_ca -config /root/opensslCA.cnf -key /vhost/ssl/private/vhostCA.key -out /vhost/ssl/certs/vhostCA.crt"]
   }
 
-  $subj = "/C=/ST=/L=/O=/CN=*.$server_name"
-
-  exec { "openssl req -sha256 -new -key /vhost/ssl/private/vhost.key -subj $subj -out /vhost/ssl/certs/vhost.csr":
-    timeout => 0,
-    path => ['/usr/bin'],
+  file { '/root/openssl.cnf':
+    ensure => present,
+    content => template('vhost/openssl.cnf.erb'),
     require => Exec['openssl genrsa -out /vhost/ssl/private/vhost.key 4096']
   }
 
-  exec { "openssl x509 -req -in /vhost/ssl/certs/vhost.csr -CA /vhost/ssl/certs/vhostCA.crt -CAkey /vhost/ssl/private/vhostCA.key -CAcreateserial -out /vhost/ssl/certs/vhost.crt -days 365":
+  exec { "openssl req -sha256 -new -config /root/openssl.cnf -key /vhost/ssl/private/vhost.key -out /vhost/ssl/certs/vhost.csr":
     timeout => 0,
     path => ['/usr/bin'],
-    require => Exec["openssl req -sha256 -new -key /vhost/ssl/private/vhost.key -subj $subj -out /vhost/ssl/certs/vhost.csr"]
+    require => File['/root/openssl.cnf']
+  }
+
+  exec { "openssl x509 -req -sha256 -CAcreateserial -days 3650 -extensions v3_req -extfile /root/opensslCA.cnf -in /vhost/ssl/certs/vhost.csr -CA /vhost/ssl/certs/vhostCA.crt -CAkey /vhost/ssl/private/vhostCA.key -out /vhost/ssl/certs/vhost.crt":
+    timeout => 0,
+    path => ['/usr/bin'],
+    require => Exec["openssl req -sha256 -new -config /root/openssl.cnf -key /vhost/ssl/private/vhost.key -out /vhost/ssl/certs/vhost.csr"]
   }
 }

@@ -12,8 +12,7 @@ RUN apt-get update
 RUN /src/build.sh
 RUN /src/clean.sh
 
-VOLUME ["/vhost/ssl/certs"]
-VOLUME ["/vhost/ssl/private"]
+VOLUME ["/vhost"]
 
 EXPOSE 80
 EXPOSE 443
