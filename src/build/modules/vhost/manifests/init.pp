@@ -3,13 +3,13 @@ class vhost {
   require vhost::php
   require vhost::dockergen
 
-  file { '/vhost/data':
+  file { '/var/www':
     ensure => directory,
     recurse => true,
     purge => true,
     force => true,
     owner => nginx,
     group => nginx,
-    source => 'puppet:///modules/vhost/vhost/data'
+    source => 'puppet:///modules/vhost/var/www'
   }
 }

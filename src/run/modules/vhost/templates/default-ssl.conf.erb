@@ -2,28 +2,19 @@ server {
   listen 443 ssl;
   server_name <%= @server_name %>;
 
-  root /vhost/data;
+  root /var/www;
 
   location / {
     index index.php;
 
     try_files $uri $uri/ =404;
-  }
 
-  location ~ \.php$ {
-    try_files $uri =404;
+    location ~ index\.php {
+      include fastcgi_params;
 
-    include fastcgi_params;
+      fastcgi_pass unix:/var/run/php5-fpm.sock;
 
-    fastcgi_split_path_info ^(.+\.php)(/.+)$;
-
-    fastcgi_pass unix:/var/run/php5-fpm.sock;
-
-    fastcgi_index index.php;
-
-    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-    fastcgi_param DOCUMENT_ROOT $document_root;
-
-    fastcgi_intercept_errors on;
+      fastcgi_param SCRIPT_FILENAME /var/www/index.php;
+    }
   }
 }
