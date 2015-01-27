@@ -58,7 +58,7 @@ Using the `fig` command
       --rm \
       --volumes-from vhostdata \
       -v $(pwd):/backup \
-      simpledrupalcloud/base:dev tar czvf /backup/vhostdata.tar.gz /vhost
+      simpledrupalcloud/base:latest tar czvf /backup/vhostdata.tar.gz /vhost
 
 ## Restore vhost data from a backup
 
@@ -66,7 +66,7 @@ Using the `fig` command
       --rm \
       --volumes-from vhostdata \
       -v $(pwd):/backup \
-      simpledrupalcloud/base:dev tar xzvf /backup/vhostdata.tar.gz
+      simpledrupalcloud/base:latest tar xzvf /backup/vhostdata.tar.gz
 
 ## License
 
