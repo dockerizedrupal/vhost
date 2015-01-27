@@ -52,6 +52,22 @@ Using the `fig` command
       && sudo cp ./vhost.conf /etc/init/vhost.conf \
       && cd -
 
+## Back up vhost data
+
+    sudo docker run \
+      --rm \
+      --volumes-from vhostdata \
+      -v $(pwd):/backup \
+      simpledrupalcloud/base:latest tar czvf /backup/vhostdata.tar.gz /vhost
+
+## Restore vhost data from a backup
+
+    sudo docker run \
+      --rm \
+      --volumes-from vhostdata \
+      -v $(pwd):/backup \
+      simpledrupalcloud/base:latest tar xzvf /backup/vhostdata.tar.gz
+
 ## License
 
 **MIT**
