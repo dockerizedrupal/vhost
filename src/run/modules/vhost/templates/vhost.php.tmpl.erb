@@ -16,10 +16,12 @@ $vhost = array();
 
     {{ range $address := $container.Addresses }}
       {{ if eq $address.Port "80" }}
-        {{ if or (eq $container.Image.Repository "httpd") (eq $container.Image.Repository "logs") }}
-          $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'http://{{ $vhost }}.<%= @server_name %>';
-        {{ else }}
-          $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'http://{{ $container.Image.Repository }}.{{ $vhost }}.<%= @server_name %>';
+        {{ if or (ne $container.Image.Repository "adminer ") (ne $container.Image.Repository "memcachephp") (ne $container.Image.Repository "phpmyadmin") (ne $container.Image.Repository "phpmoadmin") (ne $container.Image.Repository "phpmemcachedadmin") }}
+          {{ if or (eq $container.Image.Repository "httpd") (eq $container.Image.Repository "logs") }}
+            $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'http://{{ $vhost }}.<%= @server_name %>';
+          {{ else }}
+            $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'http://{{ $container.Image.Repository }}.{{ $vhost }}.<%= @server_name %>';
+          {{ end }}
         {{ end }}
       {{ else if eq $address.Port "443" }}
         {{ if or (eq $container.Image.Repository "httpd") (eq $container.Image.Repository "logs") }}
@@ -46,7 +48,9 @@ $vhost = array();
 
     {{ range $address := $container.Addresses }}
       {{ if eq $address.Port "80" }}
-        $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'http://{{ $vhost_alias }}';
+        {{ if or (ne $container.Image.Repository "adminer ") (ne $container.Image.Repository "memcachephp") (ne $container.Image.Repository "phpmyadmin") (ne $container.Image.Repository "phpmoadmin") (ne $container.Image.Repository "phpmemcachedadmin") }}
+          $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'http://{{ $vhost_alias }}';
+        {{ end }}
       {{ else if eq $address.Port "443" }}
         $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'https://{{ $vhost_alias }}';
       {{ end }}
