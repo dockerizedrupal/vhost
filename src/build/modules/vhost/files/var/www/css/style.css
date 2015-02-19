@@ -8,6 +8,10 @@ h1 {
   margin-bottom: 20px;
 }
 
+#filter {
+  text-align: center;
+}
+
 .form-group {
   margin-bottom: 20px;
 }
