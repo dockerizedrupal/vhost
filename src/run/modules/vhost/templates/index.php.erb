@@ -70,6 +70,18 @@ function logs_link_get($group) {
   return $logs_link;
 }
 
+function html_class($string) {
+  $string = strtolower($string);
+
+  $string = preg_replace("/[^a-z0-9_\s-]/", "", $string);
+
+  $string = preg_replace("/[\s-]+/", " ", $string);
+
+  $string = preg_replace("/[\s_]/", "-", $string);
+
+  return $string;
+}
+
 ?>
 <!DOCTYPE html>
 
@@ -106,7 +118,7 @@ function logs_link_get($group) {
             <div class="row">
               <div class="panel-group">
                 <div class="panel panel-default">
-                  <div class="panel-heading" data-toggle="collapse" data-target="#collapse-<?php print $host; ?>">
+                  <div class="panel-heading" data-toggle="collapse" data-target="#collapse-<?php print html_class($host); ?>">
                     <h2 class="panel-title">
                       <?php if (($link = httpd_link_get($host)) || ($link = logs_link_get($host))): ?>
                         <a href="<?php print $link; ?>" target="_blank"><?php print $host; ?></a><span class="glyphicon glyphicon-link"></span>
@@ -115,7 +127,7 @@ function logs_link_get($group) {
                       <?php endif; ?>
                     </h2>
                   </div>
-                  <div id="collapse-<?php print $host; ?>" class="panel-collapse collapse">
+                  <div id="collapse-<?php print html_class($host); ?>" class="panel-collapse collapse">
                     <table class="table">
                       <tbody>
                         <?php foreach ($containers as $container => $links): ?>
