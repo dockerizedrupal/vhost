@@ -8,6 +8,10 @@ h1 {
   margin-bottom: 20px;
 }
 
+.panel-heading {
+  cursor: pointer;
+}
+
 .panel-title {
   font-weight: bold;
   text-transform: uppercase;
@@ -34,4 +38,9 @@ h1 {
 .column-2 {
   width: 85%;
   text-align: left;
+}
+
+.collapsing {
+  -webkit-transition: none;
+  transition: none;
 }
