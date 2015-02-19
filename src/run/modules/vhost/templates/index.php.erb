@@ -88,50 +88,63 @@ function logs_link_get($group) {
   </head>
   <body>
     <div id="page" class="container">
-      <div class="row">
-        <h1><%= @server_name %></h1>
+      <div id="header">
+        <div class="row">
+          <h1><%= @server_name %></h1>
+        </div>
+        <div class="row">
+          <form>
+            <div class="form-group">
+             <input type="text" class="form-control" id="filter" placeholder="Filter">
+            </div>
+          </form>
+        </div>
       </div>
-      <?php if ($vhost): ?>
-        <?php foreach ($vhost as $host => $containers): ?>
-          <div class="panel-group">
-            <div class="panel panel-default">
-              <div class="panel-heading" data-toggle="collapse" data-target="#collapse-<?php print $host; ?>">
-                <h2 class="panel-title">
-                  <?php if (($link = httpd_link_get($host)) || ($link = logs_link_get($host))): ?>
-                    <a href="<?php print $link; ?>" target="_blank"><?php print $host; ?></a><span class="glyphicon glyphicon-link"></span>
-                  <?php else: ?>
-                    <?php print $host; ?>
-                  <?php endif; ?>
-                </h2>
-              </div>
-              <div id="collapse-<?php print $host; ?>" class="panel-collapse collapse">
-                <table class="table">
-                  <tbody>
-                    <?php foreach ($containers as $container => $links): ?>
-                      <tr>
-                        <td class="column-1"><?php print $container; ?></td>
-                        <td class="column-2">
-                          <ul class="list-group">
-                            <?php foreach ($links as $link): ?>
-                              <li class="list-group-item">
-                                <a href="<?php print $link; ?>" target="_blank"><?php print $link; ?></a>
-                              </li>
-                            <?php endforeach; ?>
-                          </ul>
-                        </td>
-                      </tr>
-                    <?php endforeach; ?>
-                  </tbody>
-                </table>
+      <div id="content">
+        <?php if ($vhost): ?>
+          <?php foreach ($vhost as $host => $containers): ?>
+            <div class="row">
+              <div class="panel-group">
+                <div class="panel panel-default">
+                  <div class="panel-heading" data-toggle="collapse" data-target="#collapse-<?php print $host; ?>">
+                    <h2 class="panel-title">
+                      <?php if (($link = httpd_link_get($host)) || ($link = logs_link_get($host))): ?>
+                        <a href="<?php print $link; ?>" target="_blank"><?php print $host; ?></a><span class="glyphicon glyphicon-link"></span>
+                      <?php else: ?>
+                        <?php print $host; ?>
+                      <?php endif; ?>
+                    </h2>
+                  </div>
+                  <div id="collapse-<?php print $host; ?>" class="panel-collapse collapse">
+                    <table class="table">
+                      <tbody>
+                        <?php foreach ($containers as $container => $links): ?>
+                          <tr>
+                            <td class="column-1"><?php print $container; ?></td>
+                            <td class="column-2">
+                              <ul class="list-group">
+                                <?php foreach ($links as $link): ?>
+                                  <li class="list-group-item">
+                                    <a href="<?php print $link; ?>" target="_blank"><?php print $link; ?></a>
+                                  </li>
+                                <?php endforeach; ?>
+                              </ul>
+                            </td>
+                          </tr>
+                        <?php endforeach; ?>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
+          <?php endforeach; ?>
+        <?php else: ?>
+          <div class="row">
+            There are no containers running on your host.
           </div>
-        <?php endforeach; ?>
-      <?php else: ?>
-        <div class="row">
-          There are no containers running on your host.
-        </div>
-      <?php endif; ?>
+        <?php endif; ?>
+      </div>
     </div>
     <script src="js/jquery.min.js"></script>
     <script src="js/jquery.storageapi.min.js"></script>
