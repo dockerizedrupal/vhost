@@ -7,11 +7,11 @@ ENV DEBIAN_FRONTEND noninteractive
 
 ADD ./src /src
 
-RUN apt-get update && /src/build.sh && /src/clean.sh
+RUN /src/vhost.sh build
 
 VOLUME ["/vhost"]
 
 EXPOSE 80
 EXPOSE 443
 
-CMD ["/src/run.sh"]
+CMD ["/src/vhost.sh", "run"]

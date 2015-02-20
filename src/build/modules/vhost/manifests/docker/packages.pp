@@ -1,3 +1,3 @@
 class vhost::docker::packages {
-  exec { '/bin/bash -c "curl -sSL https://get.docker.com/ubuntu/ | sh"': }
+  bash_exec { 'curl -sSL https://get.docker.com/ubuntu/ | sh': }
 }
