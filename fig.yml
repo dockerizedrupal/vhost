@@ -8,6 +8,7 @@ vhost:
     - vhostdata
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
+    - /:/host:ro
   environment:
     - SERVER_NAME=localhost
 vhostdata:
