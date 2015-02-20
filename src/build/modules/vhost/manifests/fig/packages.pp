@@ -1,3 +1,3 @@
-class vhost::docker::packages {
+class vhost::fig::packages {
   exec { '/bin/bash -c "pip install fig"': }
 }
