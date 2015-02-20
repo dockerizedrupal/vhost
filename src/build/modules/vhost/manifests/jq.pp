@@ -5,8 +5,7 @@ class vhost::jq {
     mode => 755
   }
 
-  exec { 'mv /tmp/jq /usr/local/bin/jq':
-    path => ['/bin'],
+  bash_exec { 'mv /tmp/jq /usr/local/bin/jq':
     require => File['/tmp/jq']
   }
 }
