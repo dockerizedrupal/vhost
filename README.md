@@ -21,6 +21,7 @@ Using the `docker` command:
       -p 443:443 \
       --volumes-from vhostdata \
       -v /var/run/docker.sock:/var/run/docker.sock \
+      -v /:/host:ro \
       -e SERVER_NAME="localhost" \
       -d \
       simpledrupalcloud/vhost:dev
