@@ -12,7 +12,7 @@ Using the `docker` command:
       --name "${CONTAINER}" \
       -h "${CONTAINER}" \
       -v /vhost \
-      simpledrupalcloud/data:latest
+      viljaste/data:latest
  
     CONTAINER="vhost" && sudo docker run \
       --name "${CONTAINER}" \
@@ -24,7 +24,7 @@ Using the `docker` command:
       -v /:/host:ro \
       -e SERVER_NAME="localhost" \
       -d \
-      simpledrupalcloud/vhost:latest
+      viljaste/vhost:latest
 
 Using the `fig` command
 
@@ -38,7 +38,7 @@ Using the `fig` command
     TMP="$(mktemp -d)" \
       && git clone http://git.simpledrupalcloud.com/simpledrupalcloud/docker-vhost.git "${TMP}" \
       && cd "${TMP}" \
-      && sudo docker build -t simpledrupalcloud/vhost:latest . \
+      && sudo docker build -t viljaste/vhost:latest . \
       && cd -
 
 ## Start the container automatically
@@ -59,7 +59,7 @@ Using the `fig` command
       --rm \
       --volumes-from vhostdata \
       -v $(pwd):/backup \
-      simpledrupalcloud/base:latest tar czvf /backup/vhostdata.tar.gz /vhost
+      viljaste/base:latest tar czvf /backup/vhostdata.tar.gz /vhost
 
 ## Restore vhost data from a backup
 
@@ -67,7 +67,7 @@ Using the `fig` command
       --rm \
       --volumes-from vhostdata \
       -v $(pwd):/backup \
-      simpledrupalcloud/base:latest tar xzvf /backup/vhostdata.tar.gz
+      viljaste/base:latest tar xzvf /backup/vhostdata.tar.gz
 
 ## License
 

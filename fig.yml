@@ -1,5 +1,5 @@
 vhost:
-  image: simpledrupalcloud/vhost:latest
+  image: viljaste/vhost:latest
   hostname: vhost
   ports:
     - "80:80"
@@ -12,7 +12,7 @@ vhost:
   environment:
     - SERVER_NAME=localhost
 vhostdata:
-  image: simpledrupalcloud/data:latest
+  image: viljaste/data:latest
   hostname: vhostdata
   volumes:
     - /vhost
