@@ -70,6 +70,33 @@ function logs_link_get($group) {
   return $logs_link;
 }
 
+function pangalink_link_get($group) {
+  global $vhost;
+
+  $pangalink_link = NULL;
+
+  foreach ($vhost as $host => $containers) {
+    if ($host == $group) {
+      foreach ($containers as $container => $links) {
+        if ($container == 'pangalink') {
+          if (count($links) > 1) {
+            $pangalink_link = $links[80];
+          }
+          else {
+            $pangalink_link = array_shift($links);
+          }
+
+          break;
+        }
+      }
+
+      break;
+    }
+  }
+
+  return $pangalink_link;
+}
+
 function html_class($string) {
   $string = strtolower($string);
   $string = preg_replace("/[^a-z0-9_\s-]/", "", $string);
@@ -117,7 +144,7 @@ function html_class($string) {
                 <div class="panel panel-default">
                   <div class="panel-heading" data-toggle="collapse" data-target="#collapse-<?php print html_class($host); ?>">
                     <h2 class="panel-title">
-                      <?php if (($link = httpd_link_get($host)) || ($link = logs_link_get($host))): ?>
+                      <?php if (($link = httpd_link_get($host)) || ($link = logs_link_get($host)) || ($link = pangalink_link_get($host))): ?>
                         <a href="<?php print $link; ?>" target="_blank"><?php print $host; ?></a><span class="glyphicon glyphicon-link"></span>
                       <?php else: ?>
                         <?php print $host; ?>

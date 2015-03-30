@@ -17,14 +17,14 @@ $vhost = array();
     {{ range $address := $container.Addresses }}
       {{ if eq $address.Port "80" }}
         {{ if and (ne $container.Image.Repository "adminer") (ne $container.Image.Repository "memcachephp") (ne $container.Image.Repository "phpmyadmin") (ne $container.Image.Repository "phpmoadmin") (ne $container.Image.Repository "phpmemcachedadmin") }}
-          {{ if or (eq $container.Image.Repository "httpd") (eq $container.Image.Repository "logs") }}
+          {{ if or (eq $container.Image.Repository "httpd") (eq $container.Image.Repository "logs") (eq $container.Image.Repository "pangalink") }}
             $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'http://{{ $vhost }}.<%= @server_name %>';
           {{ else }}
             $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'http://{{ $container.Image.Repository }}.{{ $vhost }}.<%= @server_name %>';
           {{ end }}
         {{ end }}
       {{ else if eq $address.Port "443" }}
-        {{ if or (eq $container.Image.Repository "httpd") (eq $container.Image.Repository "logs") }}
+        {{ if or (eq $container.Image.Repository "httpd") (eq $container.Image.Repository "logs") (eq $container.Image.Repository "pangalink") }}
           $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'https://{{ $vhost }}.<%= @server_name %>';
         {{ else }}
           $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'https://{{ $container.Image.Repository }}.{{ $vhost }}.<%= @server_name %>';
