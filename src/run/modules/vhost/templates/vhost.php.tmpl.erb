@@ -16,7 +16,7 @@ $vhost = array();
 
     {{ range $address := $container.Addresses }}
       {{ if eq $address.Port "80" }}
-        {{ if and (ne $container.Image.Repository "adminer") (ne $container.Image.Repository "memcachephp") (ne $container.Image.Repository "phpmyadmin") (ne $container.Image.Repository "phpmoadmin") (ne $container.Image.Repository "phpmemcachedadmin") }}
+        {{ if and (ne $container.Image.Repository "adminer") (ne $container.Image.Repository "memcachephp") (ne $container.Image.Repository "phpmyadmin") (ne $container.Image.Repository "phpmoadmin") (ne $container.Image.Repository "phpmemcachedadmin") (ne $container.Image.Repository "pangalink") }}
           {{ if or (eq $container.Image.Repository "httpd") (eq $container.Image.Repository "logs") (eq $container.Image.Repository "pangalink") }}
             $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'http://{{ $vhost }}.<%= @server_name %>';
           {{ else }}
@@ -48,7 +48,7 @@ $vhost = array();
 
     {{ range $address := $container.Addresses }}
       {{ if eq $address.Port "80" }}
-        {{ if and (ne $container.Image.Repository "adminer") (ne $container.Image.Repository "memcachephp") (ne $container.Image.Repository "phpmyadmin") (ne $container.Image.Repository "phpmoadmin") (ne $container.Image.Repository "phpmemcachedadmin") }}
+        {{ if and (ne $container.Image.Repository "adminer") (ne $container.Image.Repository "memcachephp") (ne $container.Image.Repository "phpmyadmin") (ne $container.Image.Repository "phpmoadmin") (ne $container.Image.Repository "phpmemcachedadmin") (ne $container.Image.Repository "pangalink") }}
           $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'http://{{ $vhost_alias }}';
         {{ end }}
       {{ else if eq $address.Port "443" }}
