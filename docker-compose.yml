@@ -1,6 +1,7 @@
 vhost:
   image: viljaste/vhost:latest
   hostname: vhost
+  restart: always
   ports:
     - "80:80"
     - "443:443"
