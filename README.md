@@ -21,36 +21,23 @@ Using the `docker` command:
       -p 443:443 \
       --volumes-from vhostdata \
       -v /var/run/docker.sock:/var/run/docker.sock \
-      -v /:/host:ro \
       -e SERVER_NAME="localhost" \
       -d \
       viljaste/vhost:latest
 
-Using the `fig` command
+Using the `docker-compose` command
 
     TMP="$(mktemp -d)" \
-      && git clone http://git.simpledrupalcloud.com/simpledrupalcloud/docker-vhost.git "${TMP}" \
+      && GIT_SSL_NO_VERIFY=true git clone https://git.beyondcloud.io/viljaste/docker-vhost.git "${TMP}" \
       && cd "${TMP}" \
-      && sudo fig up
+      && sudo docker-compose up
 
 ## Build the image
 
     TMP="$(mktemp -d)" \
-      && git clone http://git.simpledrupalcloud.com/simpledrupalcloud/docker-vhost.git "${TMP}" \
+      && GIT_SSL_NO_VERIFY=true git clone https://git.beyondcloud.io/viljaste/docker-vhost.git "${TMP}" \
       && cd "${TMP}" \
       && sudo docker build -t viljaste/vhost:latest . \
-      && cd -
-
-## Start the container automatically
-
-    SERVER_NAME="localhost"
-
-    TMP="$(mktemp -d)" \
-      && git clone http://git.simpledrupalcloud.com/simpledrupalcloud/docker-vhost.git "${TMP}" \
-      && cd "${TMP}" \
-      && sudo cp ./fig.yml /opt/vhost.yml \
-      && sudo sed -i "s/localhost/${SERVER_NAME}/g" /opt/vhost.yml \
-      && sudo cp ./vhost.conf /etc/init/vhost.conf \
       && cd -
 
 ## Back up vhost data

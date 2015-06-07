@@ -1,7 +1,7 @@
+.idea
 .git
 .gitignore
 README.md
 LICENSE.md
 docker-compose.yml
-vhost.conf
 example.png
