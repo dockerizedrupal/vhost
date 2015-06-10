@@ -4,6 +4,9 @@ server {
 
   root /var/www;
 
+  ssl_certificate /vhost/ssl/certs/vhost.crt;
+  ssl_certificate_key /vhost/ssl/private/vhost.key;
+
   location / {
     index index.php;
 

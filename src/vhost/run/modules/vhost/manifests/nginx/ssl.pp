@@ -45,4 +45,20 @@ class vhost::nginx::ssl {
     timeout => 0,
     require => Bash_exec["openssl req -sha256 -new -config /root/openssl.cnf -key /vhost/ssl/private/vhost.key -out /vhost/ssl/certs/vhost.csr"]
   }
+
+  file { '/root/openssl_wildcard.cnf':
+    ensure => present,
+    content => template('vhost/openssl_wildcard.cnf.erb'),
+    require => Bash_exec['openssl genrsa -out /vhost/ssl/private/vhost.key 4096']
+  }
+
+  bash_exec { "openssl req -sha256 -new -config /root/openssl_wildcard.cnf -key /vhost/ssl/private/vhost.key -out /vhost/ssl/certs/vhost_wildcard.csr":
+    timeout => 0,
+    require => File['/root/openssl_wildcard.cnf']
+  }
+
+  bash_exec { "openssl x509 -req -sha256 -CAcreateserial -days 3650 -extensions v3_req -extfile /root/opensslCA.cnf -in /vhost/ssl/certs/vhost_wildcard.csr -CA /vhost/ssl/certs/vhostCA.crt -CAkey /vhost/ssl/private/vhostCA.key -out /vhost/ssl/certs/vhost_wildcard.crt":
+    timeout => 0,
+    require => Bash_exec["openssl req -sha256 -new -config /root/openssl_wildcard.cnf -key /vhost/ssl/private/vhost.key -out /vhost/ssl/certs/vhost_wildcard.csr"]
+  }
 }

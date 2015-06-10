@@ -73,6 +73,9 @@ server {
             listen 443 ssl;
             server_name {{ $vhost }}.<%= @server_name %>;
 
+            ssl_certificate /vhost/ssl/certs/vhost_wildcard.crt;
+            ssl_certificate_key /vhost/ssl/private/vhost.key;
+
             location / {
               proxy_pass https://{{ $vhost }}.ssl;
             }
@@ -85,6 +88,9 @@ server {
           server {
             listen 443 ssl;
             server_name {{ $container.Image.Repository }}.{{ $vhost }}.<%= @server_name %>;
+
+            ssl_certificate /vhost/ssl/certs/vhost_wildcard.crt;
+            ssl_certificate_key /vhost/ssl/private/vhost.key;
 
             location / {
               proxy_pass https://{{ $container.Image.Repository }}.{{ $vhost }}.ssl;
