@@ -1,5 +1,8 @@
 server {
   listen 80 default_server;
+  server_name <%= @server_name %>;
+
+  root /var/www;
 
   location / {
     index index.php;

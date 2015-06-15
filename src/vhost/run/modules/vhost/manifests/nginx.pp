@@ -1,11 +1,11 @@
 class vhost::nginx {
   include vhost::nginx::timeout
 
-  if $http and $https {
-    if ! file_exists('/vhost/ssl/certs/vhost.crt') {
-      require vhost::nginx::ssl
-    }
+  if ! file_exists('/vhost/ssl/certs/vhost.crt') {
+    require vhost::nginx::ssl
+  }
 
+  if $http and $https {
     file { '/etc/nginx/conf.d/http_https.conf':
       ensure => present,
       content => template('vhost/http_https.conf.erb'),
@@ -26,10 +26,6 @@ class vhost::nginx {
     }
   }
   elsif $https {
-    if ! file_exists('/vhost/ssl/certs/vhost.crt') {
-      require vhost::nginx::ssl
-    }
-
     file { '/etc/nginx/conf.d/https.conf':
       ensure => present,
       content => template('vhost/https.conf.erb'),

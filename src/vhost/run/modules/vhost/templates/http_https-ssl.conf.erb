@@ -1,5 +1,6 @@
 server {
   listen 443 ssl;
+  server_name <%= @server_name %>;
 
   ssl_certificate /vhost/ssl/certs/vhost.crt;
   ssl_certificate_key /vhost/ssl/private/vhost.key;
@@ -12,6 +13,8 @@ server {
   ssl_session_cache shared:SSL:20m;
 
   ssl_session_timeout 10m;
+
+  root /var/www;
 
   location / {
     index index.php;
