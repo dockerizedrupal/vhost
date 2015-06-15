@@ -6,6 +6,10 @@ class vhost::nginx {
     ensure => absent
   }
 
+  file { '/etc/nginx/conf.d/default.conf':
+    ensure => absent
+  }
+
   file { '/etc/nginx/nginx.conf':
     ensure => present,
     source => 'puppet:///modules/vhost/etc/nginx/nginx.conf',

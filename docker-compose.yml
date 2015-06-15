@@ -11,6 +11,8 @@ vhost:
     - /var/run/docker.sock:/var/run/docker.sock
   environment:
     - SERVER_NAME=localhost
+    - TIMEOUT=300
+    - PROTOCOLS=https
 vhostdata:
   image: viljaste/data:latest
   hostname: vhostdata

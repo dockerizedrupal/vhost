@@ -2,8 +2,6 @@
 
 [Nginx](http://nginx.org/) proxy that displays all the running [Docker](https://www.docker.com/) containers on your host machine on a single page, heavily influenced by [nginx-proxy](https://github.com/jwilder/nginx-proxy).
 
-![example](/example.png)
-
 ## Run the container
 
 Using the `docker` command:
@@ -22,6 +20,8 @@ Using the `docker` command:
       --volumes-from vhostdata \
       -v /var/run/docker.sock:/var/run/docker.sock \
       -e SERVER_NAME="localhost" \
+      -e TIMEOUT="300" \
+      -e PROTOCOLS="https" \
       -d \
       viljaste/vhost:latest
 
@@ -39,22 +39,6 @@ Using the `docker-compose` command
       && cd "${TMP}" \
       && sudo docker build -t viljaste/vhost:latest . \
       && cd -
-
-## Back up vhost data
-
-    sudo docker run \
-      --rm \
-      --volumes-from vhostdata \
-      -v $(pwd):/backup \
-      viljaste/base:latest tar czvf /backup/vhostdata.tar.gz /vhost
-
-## Restore vhost data from a backup
-
-    sudo docker run \
-      --rm \
-      --volumes-from vhostdata \
-      -v $(pwd):/backup \
-      viljaste/base:latest tar xzvf /backup/vhostdata.tar.gz
 
 ## License
 
