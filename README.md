@@ -20,7 +20,7 @@ Using the `docker` command:
       --volumes-from vhostdata \
       -v /var/run/docker.sock:/var/run/docker.sock \
       -e SERVER_NAME="localhost" \
-      -e TIMEOUT="300" \
+      -e TIMEOUT="900" \
       -e PROTOCOLS="https" \
       -d \
       viljaste/vhost:latest
