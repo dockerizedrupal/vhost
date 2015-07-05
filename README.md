@@ -15,6 +15,7 @@ Using the `docker` command:
     CONTAINER="vhost" && sudo docker run \
       --name "${CONTAINER}" \
       -h "${CONTAINER}" \
+      --restart always \
       -p 80:80 \
       -p 443:443 \
       --volumes-from vhostdata \
