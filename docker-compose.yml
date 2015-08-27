@@ -1,5 +1,5 @@
 vhost:
-  image: viljaste/vhost:latest
+  image: dockerizedrupal/vhost:latest
   hostname: vhost
   restart: always
   ports:
@@ -14,7 +14,7 @@ vhost:
     - TIMEOUT=900
     - PROTOCOLS=https
 vhostdata:
-  image: viljaste/data:latest
+  image: dockerizedrupal/data:latest
   hostname: vhostdata
   volumes:
     - /vhost
