@@ -2,53 +2,73 @@
 
 $vhost = array();
 
-{{ range $vhost, $containers := groupByMulti $ "Env.VHOST" "," }}
-  $host = '{{ $vhost }}';
-
-  if (!isset($vhost[$host])) {
-    $vhost[$host] = array();
+{{ range $vhost_project_name, $containers := groupByMulti $ "Env.VHOST_PROJECT_NAME" "," }}
+  if (!isset($vhost['{{ $vhost_project_name }}'])) {
+    $vhost['{{ $vhost_project_name }}'] = array(
+      'project_name' => '{{ $vhost_project_name }}',
+      'services' => array(),
+    );
   }
 
   {{ range $container := $containers }}
-    if (!isset($vhost[$host]['{{ $container.Image.Repository }}'])) {
-      $vhost[$host]['{{ $container.Image.Repository }}'] = array();
+    {{ if ($container.Env.VHOST_PRIMARY_SERVICE) and (eq $container.Env.VHOST_PRIMARY_SERVICE "Yes") }}
+      $vhost['{{ $vhost_project_name }}']['service_name'] = '{{ $container.Env.VHOST_SERVICE_NAME }}';
+      $vhost['{{ $vhost_project_name }}']['urls'] = array();
+      $vhost['{{ $vhost_project_name }}']['domain_aliases'] = array();
+
+      {{ range $address := $container.Addresses }}
+        {{ if eq $address.Port "80" }}
+          $vhost['{{ $vhost_project_name }}']['urls'][{{ $address.Port }}] = 'http://{{ $vhost_project_name }}.<%= @server_name %>';
+        {{ else if eq $address.Port "443" }}
+          $vhost['{{ $vhost_project_name }}']['urls'][{{ $address.Port }}] = 'https://{{ $vhost_project_name }}.<%= @server_name %>';
+        {{ end }}
+      {{ end }}
+    {{ end }}
+
+    if (!isset($vhost['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}'])) {
+      $vhost['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}'] = array(
+        'service_name' => '{{ $container.Env.VHOST_SERVICE_NAME }}',
+        'version' => '{{ $container.Image.Tag }}',
+        'urls' => array(),
+        'domain_aliases' => array(),
+      );
+
+      {{ if $container.Env.VHOST_VERSION_FILE }}
+        $vhost['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['version_file'] = '{{ $container.Env.VHOST_VERSION_FILE }}';
+      {{ end }}
+
+      {{ if $container.Env.VHOST_SOURCE_URL }}
+        $vhost['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['source_url'] = '{{ $container.Env.VHOST_SOURCE_URL }}';
+      {{ end }}
     }
 
     {{ range $address := $container.Addresses }}
       {{ if eq $address.Port "80" }}
-        {{ if or (eq $container.Image.Repository "httpd") (eq $container.Image.Repository "logs") (eq $container.Image.Repository "pangalink") }}
-          $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'http://{{ $vhost }}.<%= @server_name %>';
-        {{ else }}
-          $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'http://{{ $container.Image.Repository }}.{{ $vhost }}.<%= @server_name %>';
-        {{ end }}
+        $vhost['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['urls'][{{ $address.Port }}] = 'http://{{ $container.Env.VHOST_SERVICE_NAME }}.{{ $vhost_project_name }}.<%= @server_name %>';
       {{ else if eq $address.Port "443" }}
-        {{ if or (eq $container.Image.Repository "httpd") (eq $container.Image.Repository "logs") (eq $container.Image.Repository "pangalink") }}
-          $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'https://{{ $vhost }}.<%= @server_name %>';
-        {{ else }}
-          $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'https://{{ $container.Image.Repository }}.{{ $vhost }}.<%= @server_name %>';
-        {{ end }}
+        $vhost['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['urls'][{{ $address.Port }}] = 'https://{{ $container.Env.VHOST_SERVICE_NAME }}.{{ $vhost_project_name }}.<%= @server_name %>';
       {{ end }}
     {{ end }}
   {{ end }}
 {{ end }}
 
-{{ range $vhost_alias, $containers := groupByMulti $ "Env.VHOST_ALIAS" "," }}
-  $host = '{{ $vhost_alias }}';
-
-  if (!isset($vhost[$host])) {
-    $vhost[$host] = array();
-  }
-
+{{ range $vhost_domain_alias, $containers := groupByMulti $ "Env.VHOST_DOMAIN_ALIASES" "," }}
   {{ range $container := $containers }}
-    if (!isset($vhost[$host]['{{ $container.Image.Repository }}'])) {
-      $vhost[$host]['{{ $container.Image.Repository }}'] = array();
-    }
+    {{ if ($container.Env.VHOST_PRIMARY_SERVICE) and (eq $container.Env.VHOST_PRIMARY_SERVICE "Yes") }}
+      {{ range $address := $container.Addresses }}
+        {{ if eq $address.Port "80" }}
+          $vhost['{{ $container.Env.VHOST_PROJECT_NAME }}']['domain_aliases']['{{ $vhost_domain_alias }}'] = 'http://{{ $vhost_domain_alias }}';
+        {{ else if eq $address.Port "443" }}
+          $vhost['{{ $container.Env.VHOST_PROJECT_NAME }}']['domain_aliases']['{{ $vhost_domain_alias }}'] = 'https://{{ $vhost_domain_alias }}';
+        {{ end }}
+      {{ end }}
+    {{ end }}
 
     {{ range $address := $container.Addresses }}
       {{ if eq $address.Port "80" }}
-        $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'http://{{ $vhost_alias }}';
+        $vhost['{{ $container.Env.VHOST_PROJECT_NAME }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['domain_aliases']['{{ $vhost_domain_alias }}'] = 'http://{{ $vhost_domain_alias }}';
       {{ else if eq $address.Port "443" }}
-        $vhost[$host]['{{ $container.Image.Repository }}'][{{ $address.Port }}] = 'https://{{ $vhost_alias }}';
+        $vhost['{{ $container.Env.VHOST_PROJECT_NAME }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['domain_aliases']['{{ $vhost_domain_alias }}'] = 'https://{{ $vhost_domain_alias }}';
       {{ end }}
     {{ end }}
   {{ end }}

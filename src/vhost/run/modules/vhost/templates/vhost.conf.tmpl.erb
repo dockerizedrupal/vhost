@@ -22,68 +22,68 @@ proxy_set_header X-Real-IP $remote_addr;
 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
 
-{{ range $vhost, $containers := groupByMulti $ "Env.VHOST" "," }}
+{{ range $vhost_project_name, $containers := groupByMulti $ "Env.VHOST_PROJECT_NAME" "," }}
   {{ range $container := $containers }}
     {{ range $address := $container.Addresses }}
       {{ if eq $address.Port "80" }}
-        {{ if or (eq $container.Image.Repository "httpd") (eq $container.Image.Repository "logs") (eq $container.Image.Repository "pangalink") }}
-          upstream {{ $vhost }} {
+        {{ if ($container.Env.VHOST_PRIMARY_SERVICE) and (eq $container.Env.VHOST_PRIMARY_SERVICE "Yes") }}
+          upstream {{ $vhost_project_name }} {
              server {{ $address.IP }}:{{ $address.Port }};
           }
 
           server {
             listen 80;
-            server_name {{ $vhost }}.<%= @server_name %>;
+            server_name {{ $vhost_project_name }}.<%= @server_name %>;
 
             location / {
-              proxy_pass http://{{ $vhost }};
+              proxy_pass http://{{ $vhost_project_name }};
             }
           }
         {{ else }}
-          upstream {{ $container.Image.Repository }}.{{ $vhost }} {
+          upstream {{ $container.Env.VHOST_SERVICE_NAME }}.{{ $vhost_project_name }} {
              server {{ $address.IP }}:{{ $address.Port }};
           }
 
           server {
             listen 80;
-            server_name {{ $container.Image.Repository }}.{{ $vhost }}.<%= @server_name %>;
+            server_name {{ $container.Env.VHOST_SERVICE_NAME }}.{{ $vhost_project_name }}.<%= @server_name %>;
 
             location / {
-              proxy_pass http://{{ $container.Image.Repository }}.{{ $vhost }};
+              proxy_pass http://{{ $container.Env.VHOST_SERVICE_NAME }}.{{ $vhost_project_name }};
             }
           }
         {{ end }}
       {{ else if eq $address.Port "443" }}
-        {{ if or (eq $container.Image.Repository "httpd") (eq $container.Image.Repository "logs") (eq $container.Image.Repository "pangalink") }}
-          upstream {{ $vhost }}.ssl {
+        {{ if ($container.Env.VHOST_PRIMARY_SERVICE) and (eq $container.Env.VHOST_PRIMARY_SERVICE "Yes") }}
+          upstream {{ $vhost_project_name }}.ssl {
              server {{ $address.IP }}:{{ $address.Port }};
           }
 
           server {
             listen 443 ssl;
-            server_name {{ $vhost }}.<%= @server_name %>;
+            server_name {{ $vhost_project_name }}.<%= @server_name %>;
 
             ssl_certificate /vhost/ssl/certs/vhost_wildcard.crt;
             ssl_certificate_key /vhost/ssl/private/vhost.key;
 
             location / {
-              proxy_pass https://{{ $vhost }}.ssl;
+              proxy_pass https://{{ $vhost_project_name }}.ssl;
             }
           }
         {{ else }}
-          upstream {{ $container.Image.Repository }}.{{ $vhost }}.ssl {
+          upstream {{ $container.Env.VHOST_SERVICE_NAME }}.{{ $vhost_project_name }}.ssl {
              server {{ $address.IP }}:{{ $address.Port }};
           }
 
           server {
             listen 443 ssl;
-            server_name {{ $container.Image.Repository }}.{{ $vhost }}.<%= @server_name %>;
+            server_name {{ $container.Env.VHOST_SERVICE_NAME }}.{{ $vhost_project_name }}.<%= @server_name %>;
 
             ssl_certificate /vhost/ssl/certs/vhost_wildcard.crt;
             ssl_certificate_key /vhost/ssl/private/vhost.key;
 
             location / {
-              proxy_pass https://{{ $container.Image.Repository }}.{{ $vhost }}.ssl;
+              proxy_pass https://{{ $container.Env.VHOST_SERVICE_NAME }}.{{ $vhost_project_name }}.ssl;
             }
           }
         {{ end }}
@@ -92,33 +92,33 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
   {{ end }}
 {{ end }}
 
-{{ range $vhost_alias, $containers := groupByMulti $ "Env.VHOST_ALIAS" "," }}
+{{ range $vhost_domain_aliases, $containers := groupByMulti $ "Env.VHOST_DOMAIN_ALIASES" "," }}
   {{ range $container := $containers }}
     {{ range $address := $container.Addresses }}
       {{ if eq $address.Port "80" }}
-        upstream {{ $vhost_alias }} {
+        upstream {{ $vhost_domain_aliases }} {
            server {{ $address.IP }}:{{ $address.Port }};
         }
 
         server {
           listen 80;
-          server_name {{ $vhost_alias }};
+          server_name {{ $vhost_domain_aliases }};
 
           location / {
-            proxy_pass http://{{ $vhost_alias }};
+            proxy_pass http://{{ $vhost_domain_aliases }};
           }
         }
       {{ else if eq $address.Port "443" }}
-        upstream {{ $vhost_alias }}.ssl {
+        upstream {{ $vhost_domain_aliases }}.ssl {
            server {{ $address.IP }}:{{ $address.Port }};
         }
 
         server {
           listen 443 ssl;
-          server_name {{ $vhost_alias }};
+          server_name {{ $vhost_domain_aliases }};
 
           location / {
-            proxy_pass https://{{ $vhost_alias }}.ssl;
+            proxy_pass https://{{ $vhost_domain_aliases }}.ssl;
           }
         }
       {{ end }}

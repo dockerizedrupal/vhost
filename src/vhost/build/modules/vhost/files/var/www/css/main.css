@@ -1,0 +1,48 @@
+body {
+  padding-bottom: 20px;
+}
+
+.panel-heading {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.tabs-right {
+  padding-top: 0;
+}
+
+.tabs-right > li {
+  margin-bottom: 0;
+}
+
+.nav-tabs .tabs-large {
+  display: block;
+  text-align: center;
+}
+
+.nav-tabs .tabs-large .fa {
+  font-size: 24px;
+}
+
+.table > thead > tr > th {
+  background-color: #fafafa;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.current-version {
+  float: right;
+  color: #5cb85c;
+}
+
+.latest-version {
+  display: none;
+  float: right;
+  color: #f0ad4e;
+}
+
+.page-header .current-version,
+.page-header .latest-version {
+  font-size: 16px;
+  margin-top: 20px;
+}

@@ -1,6 +1,6 @@
 # vhost
 
-[Nginx](http://nginx.org/) proxy that displays all the running [Docker](https://www.docker.com/) containers on your host machine on a single page, heavily influenced by [nginx-proxy](https://github.com/jwilder/nginx-proxy).
+The front page of your development environment.
 
 ## Run the container
 
@@ -10,7 +10,7 @@ Using the `docker` command:
       --name "${CONTAINER}" \
       -h "${CONTAINER}" \
       -v /vhost \
-      dockerizedrupal/data:1.0.2
+      dockerizedrupal/data:1.0.3
  
     CONTAINER="vhost" && sudo docker run \
       --name "${CONTAINER}" \
@@ -24,14 +24,14 @@ Using the `docker` command:
       -e TIMEOUT="900" \
       -e PROTOCOLS="https" \
       -d \
-      dockerizedrupal/vhost:1.0.2
+      dockerizedrupal/vhost:1.0.3
 
 Using the `docker-compose` command
 
     TMP="$(mktemp -d)" \
       && git clone https://github.com/dockerizedrupal/vhost.git "${TMP}" \
       && cd "${TMP}" \
-      && git checkout 1.0.2 \
+      && git checkout 1.0.3 \
       && sudo docker-compose up
 
 ## Build the image
@@ -39,8 +39,8 @@ Using the `docker-compose` command
     TMP="$(mktemp -d)" \
       && git clone https://github.com/dockerizedrupal/vhost.git "${TMP}" \
       && cd "${TMP}" \
-      && git checkout 1.0.2 \
-      && sudo docker build -t dockerizedrupal/vhost:1.0.2 . \
+      && git checkout 1.0.3 \
+      && sudo docker build -t dockerizedrupal/vhost:1.0.3 . \
       && cd -
 
 ## License
