@@ -32,5 +32,7 @@
     $('.service .latest-version').each(function() {
       latest_version($(this));
     });
+
+    $('.nav-pills a').first().trigger('click');
   });
 })(jQuery);

@@ -24,14 +24,14 @@ Using the `docker` command:
       -e TIMEOUT="900" \
       -e PROTOCOLS="https" \
       -d \
-      dockerizedrupal/vhost:1.0.3
+      dockerizedrupal/vhost:1.0.4
 
 Using the `docker-compose` command
 
     TMP="$(mktemp -d)" \
       && git clone https://github.com/dockerizedrupal/vhost.git "${TMP}" \
       && cd "${TMP}" \
-      && git checkout 1.0.3 \
+      && git checkout 1.0.4 \
       && sudo docker-compose up
 
 ## Build the image
@@ -39,8 +39,8 @@ Using the `docker-compose` command
     TMP="$(mktemp -d)" \
       && git clone https://github.com/dockerizedrupal/vhost.git "${TMP}" \
       && cd "${TMP}" \
-      && git checkout 1.0.3 \
-      && sudo docker build -t dockerizedrupal/vhost:1.0.3 . \
+      && git checkout 1.0.4 \
+      && sudo docker build -t dockerizedrupal/vhost:1.0.4 . \
       && cd -
 
 ## License

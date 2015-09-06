@@ -1,16 +1,16 @@
 vhost:
-  image: vhost:latest
+  image: dockerizedrupal/vhost:1.0.4
   hostname: vhost
   restart: always
   ports:
-    - "2000:80"
-    - "2001:443"
+    - "80:80"
+    - "443:443"
   volumes_from:
     - vhost-data
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
   environment:
-    - SERVER_NAME=viljaste.fenomen.ee
+    - SERVER_NAME=localhost
     - TIMEOUT=900
     - PROTOCOLS=https,http
 vhost-data:
@@ -18,4 +18,3 @@ vhost-data:
   hostname: vhost-data
   volumes:
     - /vhost
-    - /home/viljaste/JUNK/vhost/src:/src
