@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+HOSTS_FILE="/hosts"
+
+if [ ! -f "${HOSTS_FILE}" ]; then
+  exit
+fi
+
+grep -iv '# This entry has been added automatically by vhost' /hosts > /tmp/hosts
+
+cat /tmp/hosts > /hosts
+
+echo '<%= @hosts_ip_address %> <%= @server_name %> # This entry has been added automatically by vhost' >> "${HOSTS_FILE}"
+
+{{ range $vhost_project_name, $containers := groupByMulti $ "Env.VHOST_PROJECT_NAME" "," }}
+  {{ range $container := $containers }}
+    {{ if ($container.Env.VHOST_PRIMARY_SERVICE) and (eq $container.Env.VHOST_PRIMARY_SERVICE "Yes") }}
+      echo '<%= @hosts_ip_address %> {{ $vhost_project_name }}.<%= @server_name %> # This entry has been added automatically by vhost' >> "${HOSTS_FILE}"
+    {{ end }}
+
+    echo '<%= @hosts_ip_address %> {{ $container.Env.VHOST_SERVICE_NAME }}.{{ $vhost_project_name }}.<%= @server_name %> # This entry has been added automatically by vhost' >> "${HOSTS_FILE}"
+  {{ end }}
+{{ end }}
+
+{{ range $vhost_domain_aliases, $containers := groupByMulti $ "Env.VHOST_DOMAIN_ALIASES" "," }}
+  {{ range $container := $containers }}
+    echo '<%= @hosts_ip_address %> {{ $vhost_domain_aliases }} # This entry has been added automatically by vhost' >> "${HOSTS_FILE}"
+  {{ end }}
+{{ end }}

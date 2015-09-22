@@ -1,6 +1,6 @@
-class vhost::nginx {
-  require vhost::nginx::packages
-  require vhost::nginx::supervisor
+class build::nginx {
+  require build::nginx::packages
+  require build::nginx::supervisor
 
   file { '/etc/nginx/conf.d/example_ssl.conf':
     ensure => absent
@@ -12,7 +12,9 @@ class vhost::nginx {
 
   file { '/etc/nginx/nginx.conf':
     ensure => present,
-    source => 'puppet:///modules/vhost/etc/nginx/nginx.conf',
+    source => 'puppet:///modules/build/etc/nginx/nginx.conf',
     mode   => 644
   }
+
+  bash_exec { 'mkdir -p /etc/htpasswd': }
 }

@@ -3,9 +3,9 @@
 require_once './vhost.php';
 
 function sort_vhost_data($vhost) {
-  ksort($vhost);
+  ksort($vhost['projects']);
 
-  foreach ($vhost as $project_name => &$project) {
+  foreach ($vhost['projects'] as $project_name => &$project) {
     ksort($project['services']);
     ksort($project['urls']);
     ksort($project['domain_aliases']);
@@ -28,6 +28,233 @@ function html_class($string) {
   $string = preg_replace("/[\s_]/", "-", $string);
 
   return $string;
+}
+
+function projects($vhost) {
+?>
+<?php if ($vhost['projects']): ?>
+  <div class=" col-xs-3">
+    <form>
+      <div class="form-group">
+        <input type="text" class="form-control" id="filter" placeholder="Filter projects">
+      </div>
+    </form>
+    <ul class="nav nav-pills nav-stacked">
+      <?php foreach ($vhost['projects'] as $project): ?>
+        <li>
+          <?php if ($project['credentials']): ?>
+            <a href="#<?php print html_class($project['project_name']); ?>" data-toggle="pill">
+              <i class="fa fa-cube"></i> <?php print $project['project_name']; ?> <i class="fa fa-lock"></i>
+            </a>
+          <?php else: ?>
+            <a href="#<?php print html_class($project['project_name']); ?>" data-toggle="pill">
+              <i class="fa fa-cube"></i> <?php print $project['project_name']; ?> <i class="fa fa-unlock"></i>
+            </a>
+          <?php endif; ?>
+        </li>
+      <?php endforeach; ?>
+    </ul>
+  </div>
+  <div class="col-xs-9">
+    <div class="tab-content">
+      <?php foreach ($vhost['projects'] as $project_name => $project): ?>
+        <div class="tab-pane" id="<?php print html_class($project_name); ?>">
+          <div class="row">
+            <div class="col-xs-12">
+              <h2><i class="fa fa-cube"></i> <?php print $project['project_name']; ?></h2>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">
+                    <i class="fa fa-cog"></i> <?php print $project['service_name']; ?>
+                    <?php if ($project['repository_url']): ?>
+                      <a href="<?php print $project['repository_url']; ?>" target="_blank">
+                        <span class="current-version">
+                          <span class="label label-warning">Current version: <span class="version"><?php print $project['version']; ?></span></span>
+                        </span>
+                        <?php if (isset($project['version_file_url']) && $project['version_file_url']): ?>
+                          <span class="latest-version" data-version-file="<?php print $project['version_file_url']; ?>">
+                            <span class="label label-warning">New version is available <i class="fa fa-exclamation-circle"></i></span>
+                          </span>
+                        <?php endif; ?>
+                      </a>
+                    <?php else: ?>
+                      <span class="current-version">
+                        <span class="label label-warning">Current version: <span class="version"><?php print $project['version']; ?></span></span>
+                      </span>
+                      <?php if (isset($project['version_file_url']) && $project['version_file_url']): ?>
+                        <span class="latest-version" data-version-file="<?php print $project['version_file_url']; ?>">
+                          <span class="label label-warning">New version is available <i class="fa fa-exclamation-circle"></i></span>
+                        </span>
+                      <?php endif; ?>
+                    <?php endif; ?>
+                  </h3>
+                </div>
+                <?php if ($project['urls']): ?>
+                  <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>URL-s</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php foreach ($project['urls'] as $url): ?>
+                          <tr>
+                            <td><a href="<?php print $url; ?>" target="_blank"><?php print $url; ?></a></td>
+                          </tr>
+                        <?php endforeach; ?>
+                      </tbody>
+                    </table>
+                  </div>
+                <?php endif; ?>
+                <?php if ($project['domain_aliases']): ?>
+                  <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Domain Aliases</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php foreach ($service['domain_aliases'] as $domain_alias): ?>
+                          <tr>
+                            <td><a href="<?php print $domain_alias; ?>" target="_blank"><?php print $domain_alias; ?></a></td>
+                          </tr>
+                        <?php endforeach; ?>
+                      </tbody>
+                    </table>
+                  </div>
+                <?php endif; ?>
+                <?php if ($project['credentials']): ?>
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th colspan="2">Credentials</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th>Username</th>
+                        <td><?php print $project['credentials']['username']; ?></td>
+                      </tr>
+                      <tr>
+                        <th>Password</th>
+                        <td><?php print $project['credentials']['password']; ?></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                <?php endif; ?>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <h2><i class="fa fa-cogs"></i> Services</h2>
+              <?php print services($project); ?>
+            </div>
+          </div>
+        </div>
+      <?php endforeach; ?>
+    </div>
+  </div>
+<?php else: ?>
+  <div class="col-xs-12">
+    <p>There are no containers running on the host.</p>
+  </div>
+<?php endif; ?>
+<?php
+}
+
+function services($project) {
+?>
+<?php foreach ($project['services'] as $service_name => $service): ?>
+  <div class="service">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <i class="fa fa-cog"></i> <?php print $service['service_name']; ?>
+          <?php if ($service['repository_url']): ?>
+            <a href="<?php print $service['repository_url']; ?>" target="_blank">
+              <span class="current-version">
+                <span class="label label-warning">Current version: <span class="version"><?php print $service['version']; ?></span></span>
+              </span>
+              <?php if (isset($service['version_file_url']) && $service['version_file_url']): ?>
+                <span class="latest-version" data-version-file="<?php print $service['version_file_url']; ?>">
+                  <span class="label label-warning">New version is available <i class="fa fa-exclamation-circle"></i></span>
+                </span>
+              <?php endif; ?>
+            </a>
+          <?php else: ?>
+            <span class="current-version">
+              <span class="label label-warning">Current version: <span class="version"><?php print $service['version']; ?></span></span>
+            </span>
+            <?php if (isset($service['version_file_url']) && $service['version_file_url']): ?>
+              <span class="latest-version" data-version-file="<?php print $service['version_file_url']; ?>">
+                <span class="label label-warning">New version is available <i class="fa fa-exclamation-circle"></i></span>
+              </span>
+            <?php endif; ?>
+          <?php endif; ?>
+        </h3>
+      </div>
+      <?php if ($service['urls']): ?>
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>URL-s</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($service['urls'] as $url): ?>
+                <tr>
+                  <td><a href="<?php print $url; ?>" target="_blank"><?php print $url; ?></a></td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
+      <?php endif; ?>
+      <?php if ($service['domain_aliases']): ?>
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Domain Aliases</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($service['domain_aliases'] as $domain_alias): ?>
+                <tr>
+                  <td><a href="<?php print $domain_alias; ?>" target="_blank"><?php print $domain_alias; ?></a></td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
+      <?php endif; ?>
+      <?php if ($service['credentials']): ?>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th colspan="2">Credentials</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Username</th>
+              <td><?php print $service['credentials']['username']; ?></td>
+            </tr>
+            <tr>
+              <th>Password</th>
+              <td><?php print $service['credentials']['password']; ?></td>
+            </tr>
+          </tbody>
+        </table>
+      <?php endif; ?>
+    </div>
+  </div>
+<?php endforeach; ?>
+<?php
 }
 
 ?>
@@ -57,10 +284,10 @@ function html_class($string) {
               vhost <small><%= @server_name %></small>
               <a href="https://github.com/dockerizedrupal/vhost" target="_blank">
                 <span class="current-version">
-                  Current version: <span class="version">1.0.4</span>
+                  <span class="label label-warning">Current version: <span class="version">1.0.4</span></span>
                 </span>
                 <span class="latest-version" data-version-file="https://raw.githubusercontent.com/dockerizedrupal/vhost/master/VERSION.md">
-                  New version is available <i class="fa fa-exclamation-circle"></i>
+                  <span class="label label-warning">New version is available <i class="fa fa-exclamation-circle"></i></span>
                 </span>
               </a>
             </h1>
@@ -68,124 +295,52 @@ function html_class($string) {
         </div>
       </div>
       <div class="row">
-        <?php if ($vhost): ?>
-          <div class=" col-xs-3">
-            <ul class="nav nav-pills nav-stacked">
-              <?php foreach ($vhost as $project): ?>
-                <li>
-                  <a href="#<?php print html_class($project['project_name']); ?>" data-toggle="pill">
-                    <i class="fa fa-cube"></i> <?php print $project['project_name']; ?> <i class="fa fa-unlock"></i>
-                  </a>
-                </li>
-              <?php endforeach; ?>
+        <?php if ($vhost['credentials']): ?>
+          <div class="col-xs-12">
+            <ul class="nav nav-tabs tabs">
+              <li class="active">
+                <a href="#projects" data-toggle="tab">
+                  <i class="fa fa-cubes"></i> Projects
+                </a>
+              </li>
+              <li>
+                <a href="#credentials" data-toggle="tab">
+                  <i class="fa fa-lock"></i> Credentials
+                </a>
+              </li>
             </ul>
-          </div>
-          <div class="col-xs-9">
             <div class="tab-content">
-              <?php foreach ($vhost as $project_name => $project): ?>
-                <div class="tab-pane" id="<?php print html_class($project_name); ?>">
-                  <div class="row">
-                    <div class="col-xs-10">
-                      <div class="tab-content">
-                        <div class="tab-pane active" id="<?php print html_class($project_name); ?>-project">
-                          Project
-                        </div>
-                        <div class="tab-pane" id="<?php print html_class($project_name); ?>-services">
-                          <?php foreach ($project['services'] as $service_name => $service): ?>
-                            <div class="service">
-                              <div class="panel panel-default">
-                                <div class="panel-heading">
-                                  <h3 class="panel-title">
-                                    <i class="fa fa-cog"></i> <?php print $service['service_name']; ?>
-                                    <?php if ($service['source_url']): ?>
-                                      <a href="<?php print $service['source_url']; ?>" target="_blank">
-                                        <span class="current-version">
-                                          Current version: <span class="version"><?php print $service['version']; ?></span>
-                                        </span>
-                                        <?php if ($service['version_file']): ?>
-                                          <span class="latest-version" data-version-file="<?php print $service['version_file']; ?>">
-                                            New version is available <i class="fa fa-exclamation-circle"></i>
-                                          </span>
-                                        <?php endif; ?>
-                                      </a>
-                                    <?php else: ?>
-                                      <span class="current-version">
-                                        Current version: <span class="version"><?php print $service['version']; ?></span>
-                                      </span>
-                                      <?php if ($service['version_file']): ?>
-                                        <span class="latest-version" data-version-file="<?php print $service['version_file']; ?>">
-                                          New version is available <i class="fa fa-exclamation-circle"></i>
-                                        </span>
-                                      <?php endif; ?>
-                                    <?php endif; ?>
-                                  </h3>
-                                </div>
-                                <?php if ($service['urls']): ?>
-                                  <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                      <thead>
-                                        <tr>
-                                          <th>URL-s</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        <?php foreach ($service['urls'] as $url): ?>
-                                          <tr>
-                                            <td><a href="<?php print $url; ?>" target="_blank"><?php print $url; ?></a></td>
-                                          </tr>
-                                        <?php endforeach; ?>
-                                      </tbody>
-                                    </table>
-                                  </div>
-                                <?php endif; ?>
-                                <?php if ($service['domain_aliases']): ?>
-                                  <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                      <thead>
-                                        <tr>
-                                          <th>Domain Aliases</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        <?php foreach ($service['domain_aliases'] as $domain_alias): ?>
-                                          <tr>
-                                            <td><a href="<?php print $domain_alias; ?>" target="_blank"><?php print $domain_alias; ?></a></td>
-                                          </tr>
-                                        <?php endforeach; ?>
-                                      </tbody>
-                                    </table>
-                                  </div>
-                                <?php endif; ?>
-                              </div>
-                            </div>
-                          <?php endforeach; ?>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-xs-2">
-                      <ul class="nav nav-tabs tabs-right">
-                        <li class="active">
-                          <a href="#<?php print html_class($project['project_name']); ?>-project" data-toggle="tab">
-                            <span class="tabs-large"><i class="fa fa-cube"></i></span>
-                            <span class="tabs-large">Project</span>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#<?php print html_class($project['project_name']); ?>-services" data-toggle="tab">
-                            <span class="tabs-large"><i class="fa fa-cogs"></i></span>
-                            <span class="tabs-large">Services</span>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
+              <div class="tab-pane active" id="projects">
+                <div class="row">
+                  <?php print projects($vhost); ?>
+                </div>
+              </div>
+              <div class="tab-pane" id="credentials">
+                <div class="row">
+                  <div class="col-xs-12">
+                    <h2><i class="fa fa-lock"></i> Credentials</h2>
+                    <table class="table">
+                      <tbody>
+                        <tr>
+                          <th>Username</th>
+                          <td><?php print $vhost['credentials']['username']; ?></td>
+                        </tr>
+                        <tr>
+                          <th>Password</th>
+                          <td><?php print $vhost['credentials']['password']; ?></td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-              <?php endforeach; ?>
+              </div>
             </div>
           </div>
         <?php else: ?>
           <div class="col-xs-12">
-            <p>There are no containers running on the host.</p>
+            <div class="row">
+              <?php print projects($vhost); ?>
+            </div>
           </div>
         <?php endif; ?>
       </div>
@@ -196,3 +351,4 @@ function html_class($string) {
     <script src="js/main.js"></script>
   </body>
 </html>
+<?php print_r($vhost); ?>

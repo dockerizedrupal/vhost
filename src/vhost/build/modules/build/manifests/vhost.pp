@@ -1,7 +1,5 @@
-class vhost {
-  require vhost::nginx
-  require vhost::php
-  require vhost::dockergen
+class build::vhost {
+  require build::nginx
 
   file { '/var/www':
     ensure => directory,
@@ -10,6 +8,6 @@ class vhost {
     force => true,
     owner => nginx,
     group => nginx,
-    source => 'puppet:///modules/vhost/var/www'
+    source => 'puppet:///modules/build/var/www'
   }
 }

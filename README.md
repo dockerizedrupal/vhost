@@ -4,8 +4,6 @@ The front page of your development environment.
 
 ## Run the container
 
-Using the `docker` command:
-
     CONTAINER="vhost-data" && sudo docker run \
       --name "${CONTAINER}" \
       -h "${CONTAINER}" \
@@ -20,28 +18,28 @@ Using the `docker` command:
       -p 443:443 \
       --volumes-from vhost-data \
       -v /var/run/docker.sock:/var/run/docker.sock \
+      -v /etc/hosts:/hosts \
       -e SERVER_NAME="localhost" \
+      -e TIMEZONE="Etc/UTC" \
       -e TIMEOUT="900" \
-      -e PROTOCOLS="https" \
+      -e PROTOCOLS="https,http" \
+      -e HTTP_BASIC_AUTH_USERNAME="container" \
+      -e HTTP_BASIC_AUTH_PASSWORD="" \
       -d \
-      dockerizedrupal/vhost:1.0.4
-
-Using the `docker-compose` command
-
-    TMP="$(mktemp -d)" \
-      && git clone https://github.com/dockerizedrupal/vhost.git "${TMP}" \
-      && cd "${TMP}" \
-      && git checkout 1.0.4 \
-      && sudo docker-compose up
+      dockerizedrupal/vhost:1.0.5
 
 ## Build the image
 
     TMP="$(mktemp -d)" \
       && git clone https://github.com/dockerizedrupal/vhost.git "${TMP}" \
       && cd "${TMP}" \
-      && git checkout 1.0.4 \
-      && sudo docker build -t dockerizedrupal/vhost:1.0.4 . \
+      && git checkout 1.0.5 \
+      && sudo docker build -t dockerizedrupal/vhost:1.0.5 . \
       && cd -
+
+## Changing the container behaviour on runtime through environment variables
+
+    // TODO
 
 ## License
 

@@ -1,6 +1,7 @@
 class vhost {
   require vhost::nginx
   require vhost::dockergen
+  require vhost::timezone
 
   file { '/var/www/index.php':
     ensure => present,

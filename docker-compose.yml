@@ -1,5 +1,5 @@
 vhost:
-  image: dockerizedrupal/vhost:1.0.4
+  image: dockerizedrupal/vhost:1.0.5
   hostname: vhost
   restart: always
   ports:
@@ -9,10 +9,14 @@ vhost:
     - vhost-data
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
+    - /etc/hosts:/hosts
   environment:
     - SERVER_NAME=localhost
+    - TIMEZONE=Etc/UTC
     - TIMEOUT=900
     - PROTOCOLS=https,http
+    - HTTP_BASIC_AUTH_USERNAME=container
+    - HTTP_BASIC_AUTH_PASSWORD=
 vhost-data:
   image: dockerizedrupal/data:1.0.3
   hostname: vhost-data

@@ -5,6 +5,10 @@ class vhost::nginx {
     require vhost::nginx::ssl
   }
 
+  if $http_basic_auth_password {
+    include vhost::nginx::http_basic_auth
+  }
+
   if $http and $https {
     file { '/etc/nginx/conf.d/http_https.conf':
       ensure => present,
