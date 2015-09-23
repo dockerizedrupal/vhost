@@ -8,26 +8,14 @@ h2 {
   line-height: 36px;
 }
 
+th,
+td {
+  width: 50%;
+}
+
 .panel-heading {
   padding-left: 8px;
   padding-right: 8px;
-}
-
-.tabs-right {
-  padding-top: 0;
-}
-
-.tabs-right > li {
-  margin-bottom: 0;
-}
-
-.nav-tabs .tabs-large {
-  display: block;
-  text-align: center;
-}
-
-.nav-tabs .tabs-large .fa {
-  font-size: 24px;
 }
 
 .table > thead > tr > th {
@@ -55,6 +43,11 @@ h2 {
   margin-bottom: 20px;
 }
 
-.nav-pills .fa-unlock {
+.nav-pills {
+  margin-bottom: 20px;
+}
+
+.nav-pills .fa-unlock,
+.nav-pills .fa-lock {
   float: right;
 }

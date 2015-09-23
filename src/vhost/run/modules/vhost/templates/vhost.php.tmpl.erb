@@ -26,6 +26,16 @@ $vhost['credentials']['password'] = '<%= @http_basic_auth_password %>';
       $vhost['projects']['{{ $vhost_project_name }}']['service_name'] = '{{ $container.Env.VHOST_SERVICE_NAME }}';
       $vhost['projects']['{{ $vhost_project_name }}']['version'] = '{{ $container.Image.Tag }}';
 
+      {{ if $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}
+        {{ if $container.Env.VHOST_HTTP_BASIC_AUTH_USERNAME }}
+          $vhost['projects']['{{ $vhost_project_name }}']['credentials']['username'] = '{{ $container.Env.VHOST_HTTP_BASIC_AUTH_USERNAME }}';
+        {{ else }}
+          $vhost['projects']['{{ $vhost_project_name }}']['credentials']['username'] = 'container';
+        {{ end }}
+
+        $vhost['projects']['{{ $vhost_project_name }}']['credentials']['password'] = '{{ $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}';
+      {{ end }}
+
       {{ if $container.Env.VHOST_VERSION_FILE_URL }}
         $vhost['projects']['{{ $vhost_project_name }}']['version_file_url'] = '{{ $container.Env.VHOST_VERSION_FILE_URL }}';
       {{ end }}
