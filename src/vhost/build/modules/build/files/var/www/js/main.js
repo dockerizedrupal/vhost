@@ -39,7 +39,23 @@
 
     latest_version($('.latest-version'));
 
-    $('.nav-pills a').first().trigger('click');
+    $('.password').each(function() {
+      for (var i = 0; i < $(this).html().length; i++) {
+        $(this).hide().parent().find('.asterisk').append('<i class="fa fa-asterisk"></i>');
+      }
+    });
+
+    $('.password').on('click', function(e) {
+      e.preventDefault();
+
+      $(this).hide().parent().find('.asterisk').show();
+    });
+
+    $('.asterisk').on('click', function(e) {
+      e.preventDefault();
+
+      $(this).hide().parent().find('.password').show();
+    });
 
     var filter = function() {
       $('.nav-pills li').each(function() {
@@ -54,5 +70,9 @@
     $('#filter').keyup(function() {
       filter();
     });
+
+    $('.nav-pills a').first().trigger('click');
+
+    $('[data-toggle="tooltip"]').tooltip();
   });
 })(jQuery);

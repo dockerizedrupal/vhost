@@ -51,3 +51,13 @@ td {
 .nav-pills .fa-lock {
   float: right;
 }
+
+.asterisk {
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.password {
+  display: none;
+  cursor: pointer;
+}

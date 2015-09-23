@@ -139,7 +139,10 @@ function projects($vhost) {
                       </tr>
                       <tr>
                         <th>Password</th>
-                        <td><?php print $project['credentials']['password']; ?></td>
+                        <td>
+                          <span class="asterisk" data-toggle="tooltip" data-placement="top" title="Click on asterisks to reveal the password"></span>
+                          <span class="password"><?php print $project['credentials']['password']; ?></span>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -246,7 +249,10 @@ function services($project) {
             </tr>
             <tr>
               <th>Password</th>
-              <td><?php print $service['credentials']['password']; ?></td>
+              <td>
+                <span class="asterisk" data-toggle="tooltip" data-placement="top" title="Click on asterisks to reveal the password"></span>
+                <span class="password"><?php print $service['credentials']['password']; ?></span>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -327,7 +333,10 @@ function services($project) {
                         </tr>
                         <tr>
                           <th>Password</th>
-                          <td><?php print $vhost['credentials']['password']; ?></td>
+                          <td>
+                            <span class="asterisk" data-toggle="tooltip" data-placement="top" title="Click on asterisks to reveal the password"></span>
+                            <span class="password"><?php print $vhost['credentials']['password']; ?></span>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
