@@ -33,7 +33,7 @@ The front page of your development environment.
     TMP="$(mktemp -d)" \
       && git clone https://github.com/dockerizedrupal/vhost.git "${TMP}" \
       && cd "${TMP}" \
-      && git checkout 1.0.5 \
+      && git checkout 1.0.6 \
       && sudo docker build -t dockerizedrupal/vhost:1.0.6 . \
       && cd -
 
