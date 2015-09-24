@@ -1,8 +1,9 @@
-var current_version = '1.0.7';
-var new_version = '1.0.8';
+var current_version = '1.0.8';
+var new_version = '1.0.9';
 
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-replace');
+
   grunt.initConfig({
     replace: {
       task1: {
@@ -106,5 +107,7 @@ module.exports = function(grunt) {
       },
     }
   });
+
+  grunt.registerTask('bump', 'replace');
   grunt.registerTask('default', 'replace');
 };

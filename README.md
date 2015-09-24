@@ -26,15 +26,15 @@ The front page of your development environment.
       -e HTTP_BASIC_AUTH_USERNAME="container" \
       -e HTTP_BASIC_AUTH_PASSWORD="" \
       -d \
-      dockerizedrupal/vhost:1.0.8
+      dockerizedrupal/vhost:1.0.9
 
 ## Build the image
 
     TMP="$(mktemp -d)" \
       && git clone https://github.com/dockerizedrupal/vhost.git "${TMP}" \
       && cd "${TMP}" \
-      && git checkout 1.0.8 \
-      && sudo docker build -t dockerizedrupal/vhost:1.0.8 . \
+      && git checkout 1.0.9 \
+      && sudo docker build -t dockerizedrupal/vhost:1.0.9 . \
       && cd -
 
 ## Changing the container behaviour on runtime through environment variables
