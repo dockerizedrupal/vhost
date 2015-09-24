@@ -4,3 +4,6 @@
 README.md
 LICENSE.md
 docker-compose.yml
+VERSION.md
+Gruntfile.js
+package.json
