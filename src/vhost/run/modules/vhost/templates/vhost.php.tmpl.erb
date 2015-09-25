@@ -26,14 +26,18 @@ $vhost['credentials']['password'] = '<%= @http_basic_auth_password %>';
       $vhost['projects']['{{ $vhost_project_name }}']['service_name'] = '{{ $container.Env.VHOST_SERVICE_NAME }}';
       $vhost['projects']['{{ $vhost_project_name }}']['version'] = '{{ $container.Image.Tag }}';
 
-      {{ if $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}
-        {{ if $container.Env.VHOST_HTTP_BASIC_AUTH_USERNAME }}
-          $vhost['projects']['{{ $vhost_project_name }}']['credentials']['username'] = '{{ $container.Env.VHOST_HTTP_BASIC_AUTH_USERNAME }}';
-        {{ else }}
-          $vhost['projects']['{{ $vhost_project_name }}']['credentials']['username'] = 'container';
-        {{ end }}
+      {{ if ($container.Env.VHOST_HTTP_BASIC_AUTH) and (eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off") }}
+        $vhost['projects']['{{ $vhost_project_name }}']['credentials'] = 'Off';
+      {{ else }}
+        {{ if $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}
+          {{ if $container.Env.VHOST_HTTP_BASIC_AUTH_USERNAME }}
+            $vhost['projects']['{{ $vhost_project_name }}']['credentials']['username'] = '{{ $container.Env.VHOST_HTTP_BASIC_AUTH_USERNAME }}';
+          {{ else }}
+            $vhost['projects']['{{ $vhost_project_name }}']['credentials']['username'] = 'container';
+          {{ end }}
 
-        $vhost['projects']['{{ $vhost_project_name }}']['credentials']['password'] = '{{ $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}';
+          $vhost['projects']['{{ $vhost_project_name }}']['credentials']['password'] = '{{ $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}';
+        {{ end }}
       {{ end }}
 
       {{ if $container.Env.VHOST_VERSION_FILE_URL }}
@@ -63,14 +67,18 @@ $vhost['credentials']['password'] = '<%= @http_basic_auth_password %>';
       );
     }
 
-    {{ if $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}
-      {{ if $container.Env.VHOST_HTTP_BASIC_AUTH_USERNAME }}
-        $vhost['projects']['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['credentials']['username'] = '{{ $container.Env.VHOST_HTTP_BASIC_AUTH_USERNAME }}';
-      {{ else }}
-        $vhost['projects']['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['credentials']['username'] = 'container';
-      {{ end }}
+    {{ if ($container.Env.VHOST_HTTP_BASIC_AUTH) and (eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off") }}
+      $vhost['projects']['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['credentials'] = 'Off';
+    {{ else }}
+      {{ if $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}
+        {{ if $container.Env.VHOST_HTTP_BASIC_AUTH_USERNAME }}
+          $vhost['projects']['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['credentials']['username'] = '{{ $container.Env.VHOST_HTTP_BASIC_AUTH_USERNAME }}';
+        {{ else }}
+          $vhost['projects']['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['credentials']['username'] = 'container';
+        {{ end }}
 
-      $vhost['projects']['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['credentials']['password'] = '{{ $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}';
+        $vhost['projects']['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['credentials']['password'] = '{{ $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}';
+      {{ end }}
     {{ end }}
 
     {{ if $container.Env.VHOST_VERSION_FILE_URL }}

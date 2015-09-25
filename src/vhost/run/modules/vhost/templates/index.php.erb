@@ -42,13 +42,17 @@ function projects($vhost) {
     <ul class="nav nav-pills nav-stacked">
       <?php foreach ($vhost['projects'] as $project): ?>
         <li>
-          <?php if ($project['credentials']): ?>
+          <?php if ($project['credentials'] == 'Off'): ?>
+            <a href="#<?php print html_class($project['project_name']); ?>" data-toggle="pill">
+              <i class="fa fa-cube"></i> <?php print $project['project_name']; ?> <i class="fa fa-unlock"></i>
+            </a>
+          <?php elseif ($project['credentials'] && is_array($project['credentials'])): ?>
             <a href="#<?php print html_class($project['project_name']); ?>" data-toggle="pill">
               <i class="fa fa-cube"></i> <?php print $project['project_name']; ?> <i class="fa fa-lock"></i>
             </a>
           <?php else: ?>
             <a href="#<?php print html_class($project['project_name']); ?>" data-toggle="pill">
-              <i class="fa fa-cube"></i> <?php print $project['project_name']; ?> <i class="fa fa-unlock"></i>
+              <i class="fa fa-cube"></i> <?php print $project['project_name']; ?>
             </a>
           <?php endif; ?>
         </li>
@@ -69,7 +73,7 @@ function projects($vhost) {
                     <?php if ($project['repository_url']): ?>
                       <a href="<?php print $project['repository_url']; ?>" target="_blank">
                         <span class="current-version">
-                          <span class="label label-warning">Current version: <span class="version"><?php print $project['version']; ?></span></span>
+                          <span class="label label-info">Current version: <span class="version"><?php print $project['version']; ?></span></span>
                         </span>
                         <?php if (isset($project['version_file_url']) && $project['version_file_url']): ?>
                           <span class="latest-version" data-version-file="<?php print $project['version_file_url']; ?>">
@@ -79,7 +83,7 @@ function projects($vhost) {
                       </a>
                     <?php else: ?>
                       <span class="current-version">
-                        <span class="label label-warning">Current version: <span class="version"><?php print $project['version']; ?></span></span>
+                        <span class="label label-info">Current version: <span class="version"><?php print $project['version']; ?></span></span>
                       </span>
                       <?php if (isset($project['version_file_url']) && $project['version_file_url']): ?>
                         <span class="latest-version" data-version-file="<?php print $project['version_file_url']; ?>">
@@ -125,7 +129,7 @@ function projects($vhost) {
                     </table>
                   </div>
                 <?php endif; ?>
-                <?php if ($project['credentials']): ?>
+                <?php if ($project['credentials'] && is_array($project['credentials'])): ?>
                   <table class="table table-bordered">
                     <thead>
                       <tr>
@@ -179,7 +183,7 @@ function services($project) {
           <?php if ($service['repository_url']): ?>
             <a href="<?php print $service['repository_url']; ?>" target="_blank">
               <span class="current-version">
-                <span class="label label-warning">Current version: <span class="version"><?php print $service['version']; ?></span></span>
+                <span class="label label-info">Current version: <span class="version"><?php print $service['version']; ?></span></span>
               </span>
               <?php if (isset($service['version_file_url']) && $service['version_file_url']): ?>
                 <span class="latest-version" data-version-file="<?php print $service['version_file_url']; ?>">
@@ -189,7 +193,7 @@ function services($project) {
             </a>
           <?php else: ?>
             <span class="current-version">
-              <span class="label label-warning">Current version: <span class="version"><?php print $service['version']; ?></span></span>
+              <span class="label label-info">Current version: <span class="version"><?php print $service['version']; ?></span></span>
             </span>
             <?php if (isset($service['version_file_url']) && $service['version_file_url']): ?>
               <span class="latest-version" data-version-file="<?php print $service['version_file_url']; ?>">
@@ -235,7 +239,7 @@ function services($project) {
           </table>
         </div>
       <?php endif; ?>
-      <?php if ($service['credentials']): ?>
+      <?php if ($service['credentials'] && is_array($service['credentials'])): ?>
         <table class="table table-bordered">
           <thead>
             <tr>
@@ -273,7 +277,6 @@ function services($project) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><%= @server_name %></title>
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="bower_components/bootstrap-vertical-tabs/bootstrap.vertical-tabs.min.css" rel="stylesheet">
     <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="css/main.css" rel="stylesheet">
     <!--[if lt IE 9]>
@@ -290,7 +293,7 @@ function services($project) {
               vhost <small><%= @server_name %></small>
               <a href="https://github.com/dockerizedrupal/vhost" target="_blank">
                 <span class="current-version">
-                  <span class="label label-warning">Current version: <span class="version">1.0.11</span></span>
+                  <span class="label label-info">Current version: <span class="version">1.0.12</span></span>
                 </span>
                 <span class="latest-version" data-version-file="https://raw.githubusercontent.com/dockerizedrupal/vhost/master/VERSION.md">
                   <span class="label label-warning">New version is available <i class="fa fa-exclamation-circle"></i></span>
@@ -301,7 +304,7 @@ function services($project) {
         </div>
       </div>
       <div class="row">
-        <?php if ($vhost['credentials']): ?>
+        <?php if ($vhost['credentials'] && is_array($vhost['credentials'])): ?>
           <div class="col-md-12">
             <ul class="nav nav-tabs tabs">
               <li class="active">
@@ -325,7 +328,7 @@ function services($project) {
                 <div class="row">
                   <div class="col-md-12">
                     <h2><i class="fa fa-lock"></i> Credentials</h2>
-                    <table class="table">
+                    <table class="table table-bordered">
                       <tbody>
                         <tr>
                           <th>Username</th>
@@ -356,7 +359,6 @@ function services($project) {
     </div>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="bower_components/jQuery-Storage-API/jquery.storageapi.min.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>

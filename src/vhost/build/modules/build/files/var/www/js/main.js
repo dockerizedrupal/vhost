@@ -25,7 +25,7 @@
             if (version === $('.version', $current_version).html()) {
               var $label = $('.label', $current_version);
 
-              $label.removeClass('label-warning');
+              $label.removeClass('label-info');
               $label.addClass('label-success');
             }
             else {

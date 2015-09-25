@@ -13,6 +13,10 @@ td {
   width: 50%;
 }
 
+.label .fa {
+  display: inline
+}
+
 .panel-heading {
   padding-left: 8px;
   padding-right: 8px;
