@@ -35,7 +35,7 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
         {{ if $container.Env.VHOST_PRIMARY_SERVICE }}
           {{ if eq $container.Env.VHOST_PRIMARY_SERVICE "True" }}
             upstream {{ $vhost_project_name }} {
-               server {{ $address.IP }}:{{ $address.Port }};
+              server {{ $address.IP }}:{{ $address.Port }};
             }
 
             server {
@@ -59,7 +59,7 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
         {{ end }}
 
         upstream {{ $container.Env.VHOST_SERVICE_NAME }}.{{ $vhost_project_name }} {
-           server {{ $address.IP }}:{{ $address.Port }};
+          server {{ $address.IP }}:{{ $address.Port }};
         }
 
         server {
@@ -71,7 +71,7 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
               {{ if eq $container.Env.VHOST_HTTP_BASIC_AUTH "On" }}
                 auth_basic "Authentication Required";
                 auth_basic_user_file "/etc/htpasswd/containers/{{ $vhost_project_name }}.{{ $container.Env.VHOST_SERVICE_NAME }}.htpasswd";
-              {{ else if (eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off" }}
+              {{ else if eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off" }}
                 auth_basic off;
               {{ end }}
             {{ end }}
@@ -83,7 +83,7 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
         {{ if $container.Env.VHOST_PRIMARY_SERVICE }}
           {{ if eq $container.Env.VHOST_PRIMARY_SERVICE "True" }}
             upstream {{ $vhost_project_name }}.ssl {
-               server {{ $address.IP }}:{{ $address.Port }};
+              server {{ $address.IP }}:{{ $address.Port }};
             }
 
             server {
@@ -110,7 +110,7 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
         {{ end }}
 
         upstream {{ $container.Env.VHOST_SERVICE_NAME }}.{{ $vhost_project_name }}.ssl {
-           server {{ $address.IP }}:{{ $address.Port }};
+          server {{ $address.IP }}:{{ $address.Port }};
         }
 
         server {
@@ -143,7 +143,7 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
     {{ range $address := $container.Addresses }}
       {{ if eq $address.Port "80" }}
         upstream {{ $vhost_domain_aliases }} {
-           server {{ $address.IP }}:{{ $address.Port }};
+          server {{ $address.IP }}:{{ $address.Port }};
         }
 
         server {
@@ -165,7 +165,7 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
         }
       {{ else if eq $address.Port "443" }}
         upstream {{ $vhost_domain_aliases }}.ssl {
-           server {{ $address.IP }}:{{ $address.Port }};
+          server {{ $address.IP }}:{{ $address.Port }};
         }
 
         server {
