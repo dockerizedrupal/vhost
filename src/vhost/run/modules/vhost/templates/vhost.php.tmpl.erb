@@ -5,7 +5,7 @@ $vhost = array(
   'projects' => array(),
 );
 
-<% if @http_basic_auth_password and !@http_basic_auth_password.empty? -%>
+<% if @http_basic_auth == "On" -%>
 $vhost['credentials']['username'] = '<%= @http_basic_auth_username %>';
 $vhost['credentials']['password'] = '<%= @http_basic_auth_password %>';
 <% end -%>
@@ -22,37 +22,39 @@ $vhost['credentials']['password'] = '<%= @http_basic_auth_password %>';
   }
 
   {{ range $container := $containers }}
-    {{ if ($container.Env.VHOST_PRIMARY_SERVICE) and (eq $container.Env.VHOST_PRIMARY_SERVICE "True") }}
-      $vhost['projects']['{{ $vhost_project_name }}']['service_name'] = '{{ $container.Env.VHOST_SERVICE_NAME }}';
-      $vhost['projects']['{{ $vhost_project_name }}']['version'] = '{{ $container.Image.Tag }}';
+    {{ if $container.Env.VHOST_PRIMARY_SERVICE }}
+      {{ if eq $container.Env.VHOST_PRIMARY_SERVICE "True" }}
+        $vhost['projects']['{{ $vhost_project_name }}']['service_name'] = '{{ $container.Env.VHOST_SERVICE_NAME }}';
+        $vhost['projects']['{{ $vhost_project_name }}']['version'] = '{{ $container.Image.Tag }}';
 
-      {{ if ($container.Env.VHOST_HTTP_BASIC_AUTH) and (eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off") }}
-        $vhost['projects']['{{ $vhost_project_name }}']['credentials'] = 'Off';
-      {{ else }}
-        {{ if $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}
-          {{ if $container.Env.VHOST_HTTP_BASIC_AUTH_USERNAME }}
-            $vhost['projects']['{{ $vhost_project_name }}']['credentials']['username'] = '{{ $container.Env.VHOST_HTTP_BASIC_AUTH_USERNAME }}';
-          {{ else }}
-            $vhost['projects']['{{ $vhost_project_name }}']['credentials']['username'] = 'container';
+        {{ if $container.Env.VHOST_HTTP_BASIC_AUTH }}
+          {{ if eq $container.Env.VHOST_HTTP_BASIC_AUTH "On" }}
+            {{ if $container.Env.VHOST_HTTP_BASIC_AUTH_USERNAME }}
+              $vhost['projects']['{{ $vhost_project_name }}']['credentials']['username'] = '{{ $container.Env.VHOST_HTTP_BASIC_AUTH_USERNAME }}';
+            {{ else }}
+              $vhost['projects']['{{ $vhost_project_name }}']['credentials']['username'] = '<%= @http_basic_auth_username %>';
+            {{ end }}
+
+            $vhost['projects']['{{ $vhost_project_name }}']['credentials']['password'] = '{{ $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}';
+          {{ else if eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off" }}
+            $vhost['projects']['{{ $vhost_project_name }}']['credentials'] = 'Off';
           {{ end }}
-
-          $vhost['projects']['{{ $vhost_project_name }}']['credentials']['password'] = '{{ $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}';
         {{ end }}
-      {{ end }}
 
-      {{ if $container.Env.VHOST_VERSION_FILE_URL }}
-        $vhost['projects']['{{ $vhost_project_name }}']['version_file_url'] = '{{ $container.Env.VHOST_VERSION_FILE_URL }}';
-      {{ end }}
+        {{ if $container.Env.VHOST_VERSION_FILE_URL }}
+          $vhost['projects']['{{ $vhost_project_name }}']['version_file_url'] = '{{ $container.Env.VHOST_VERSION_FILE_URL }}';
+        {{ end }}
 
-      {{ if $container.Env.VHOST_REPOSITORY_URL }}
-        $vhost['projects']['{{ $vhost_project_name }}']['repository_url'] = '{{ $container.Env.VHOST_REPOSITORY_URL }}';
-      {{ end }}
+        {{ if $container.Env.VHOST_REPOSITORY_URL }}
+          $vhost['projects']['{{ $vhost_project_name }}']['repository_url'] = '{{ $container.Env.VHOST_REPOSITORY_URL }}';
+        {{ end }}
 
-      {{ range $address := $container.Addresses }}
-        {{ if eq $address.Port "80" }}
-          $vhost['projects']['{{ $vhost_project_name }}']['urls'][{{ $address.Port }}] = 'http://{{ $vhost_project_name }}.<%= @server_name %>';
-        {{ else if eq $address.Port "443" }}
-          $vhost['projects']['{{ $vhost_project_name }}']['urls'][{{ $address.Port }}] = 'https://{{ $vhost_project_name }}.<%= @server_name %>';
+        {{ range $address := $container.Addresses }}
+          {{ if eq $address.Port "80" }}
+            $vhost['projects']['{{ $vhost_project_name }}']['urls'][{{ $address.Port }}] = 'http://{{ $vhost_project_name }}.<%= @server_name %>';
+          {{ else if eq $address.Port "443" }}
+            $vhost['projects']['{{ $vhost_project_name }}']['urls'][{{ $address.Port }}] = 'https://{{ $vhost_project_name }}.<%= @server_name %>';
+          {{ end }}
         {{ end }}
       {{ end }}
     {{ end }}
@@ -67,17 +69,17 @@ $vhost['credentials']['password'] = '<%= @http_basic_auth_password %>';
       );
     }
 
-    {{ if ($container.Env.VHOST_HTTP_BASIC_AUTH) and (eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off") }}
-      $vhost['projects']['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['credentials'] = 'Off';
-    {{ else }}
-      {{ if $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}
+    {{ if $container.Env.VHOST_HTTP_BASIC_AUTH }}
+      {{ if eq $container.Env.VHOST_HTTP_BASIC_AUTH "On" }}
         {{ if $container.Env.VHOST_HTTP_BASIC_AUTH_USERNAME }}
           $vhost['projects']['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['credentials']['username'] = '{{ $container.Env.VHOST_HTTP_BASIC_AUTH_USERNAME }}';
         {{ else }}
-          $vhost['projects']['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['credentials']['username'] = 'container';
+          $vhost['projects']['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['credentials']['username'] = '<%= @http_basic_auth_username %>';
         {{ end }}
 
         $vhost['projects']['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['credentials']['password'] = '{{ $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}';
+      {{ else if eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off" }}
+        $vhost['projects']['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['credentials'] = 'Off';
       {{ end }}
     {{ end }}
 
@@ -101,22 +103,28 @@ $vhost['credentials']['password'] = '<%= @http_basic_auth_password %>';
 
 {{ range $vhost_domain_alias, $containers := groupByMulti $ "Env.VHOST_DOMAIN_ALIASES" "," }}
   {{ range $container := $containers }}
-    {{ if ($container.Env.VHOST_PRIMARY_SERVICE) and (eq $container.Env.VHOST_PRIMARY_SERVICE "True") }}
-      {{ if $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}
-        {{ if $container.Env.VHOST_HTTP_BASIC_AUTH_USERNAME }}
-          $vhost['projects']['{{ $container.Env.VHOST_PROJECT_NAME }}']['credentials']['username'] = '{{ $container.Env.VHOST_HTTP_BASIC_AUTH_USERNAME }}';
-        {{ else }}
-          $vhost['projects']['{{ $container.Env.VHOST_PROJECT_NAME }}']['credentials']['username'] = 'container';
+    {{ if $container.Env.VHOST_PRIMARY_SERVICE }}
+      {{ if eq $container.Env.VHOST_PRIMARY_SERVICE "True" }}
+        {{ if $container.Env.VHOST_HTTP_BASIC_AUTH }}
+          {{ if eq $container.Env.VHOST_HTTP_BASIC_AUTH "On" }}
+            {{ if $container.Env.VHOST_HTTP_BASIC_AUTH_USERNAME }}
+              $vhost['projects']['{{ $container.Env.VHOST_PROJECT_NAME }}']['credentials']['username'] = '{{ $container.Env.VHOST_HTTP_BASIC_AUTH_USERNAME }}';
+            {{ else }}
+              $vhost['projects']['{{ $container.Env.VHOST_PROJECT_NAME }}']['credentials']['username'] = '<%= @http_basic_auth_username %>';
+            {{ end }}
+
+            $vhost['projects']['{{ $container.Env.VHOST_PROJECT_NAME }}']['credentials']['password'] = '{{ $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}';
+          {{ else if eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off" }}
+            $vhost['projects']['{{ $container.Env.VHOST_PROJECT_NAME }}']['credentials'] = 'Off';
+          {{ end }}
         {{ end }}
 
-        $vhost['projects']['{{ $container.Env.VHOST_PROJECT_NAME }}']['credentials']['password'] = '{{ $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}';
-      {{ end }}
-
-      {{ range $address := $container.Addresses }}
-        {{ if eq $address.Port "80" }}
-          $vhost['projects']['{{ $container.Env.VHOST_PROJECT_NAME }}']['domain_aliases']['{{ $vhost_domain_alias }}'] = 'http://{{ $vhost_domain_alias }}';
-        {{ else if eq $address.Port "443" }}
-          $vhost['projects']['{{ $container.Env.VHOST_PROJECT_NAME }}']['domain_aliases']['{{ $vhost_domain_alias }}'] = 'https://{{ $vhost_domain_alias }}';
+        {{ range $address := $container.Addresses }}
+          {{ if eq $address.Port "80" }}
+            $vhost['projects']['{{ $container.Env.VHOST_PROJECT_NAME }}']['domain_aliases']['{{ $vhost_domain_alias }}'] = 'http://{{ $vhost_domain_alias }}';
+          {{ else if eq $address.Port "443" }}
+            $vhost['projects']['{{ $container.Env.VHOST_PROJECT_NAME }}']['domain_aliases']['{{ $vhost_domain_alias }}'] = 'https://{{ $vhost_domain_alias }}';
+          {{ end }}
         {{ end }}
       {{ end }}
     {{ end }}

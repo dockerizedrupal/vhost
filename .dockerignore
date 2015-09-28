@@ -7,3 +7,4 @@ docker-compose.yml
 VERSION.md
 Gruntfile.js
 package.json
+node_modules

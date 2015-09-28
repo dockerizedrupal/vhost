@@ -2,13 +2,15 @@
 
 The front page of your development environment.
 
+This project is part of the [Dockerized Drupal](https://dockerizedrupal.com/) initiative.
+
 ## Run the container
 
     CONTAINER="vhost-data" && sudo docker run \
       --name "${CONTAINER}" \
       -h "${CONTAINER}" \
       -v /vhost \
-      dockerizedrupal/data:1.0.3
+      dockerizedrupal/data:1.1.0
  
     CONTAINER="vhost" && sudo docker run \
       --name "${CONTAINER}" \
@@ -21,20 +23,21 @@ The front page of your development environment.
       -v /etc/hosts:/hosts \
       -e SERVER_NAME="localhost" \
       -e TIMEZONE="Etc/UTC" \
-      -e TIMEOUT="900" \
+      -e PROXY_READ_TIMEOUT="900" \
       -e PROTOCOLS="https,http" \
+      -e HTTP_BASIC_AUTH="Off" \
       -e HTTP_BASIC_AUTH_USERNAME="container" \
       -e HTTP_BASIC_AUTH_PASSWORD="" \
       -d \
-      dockerizedrupal/vhost:1.0.12
+      dockerizedrupal/vhost:1.0.13
 
 ## Build the image
 
     TMP="$(mktemp -d)" \
       && git clone https://github.com/dockerizedrupal/vhost.git "${TMP}" \
       && cd "${TMP}" \
-      && git checkout 1.0.12 \
-      && sudo docker build -t dockerizedrupal/vhost:1.0.12 . \
+      && git checkout 1.0.13 \
+      && sudo docker build -t dockerizedrupal/vhost:1.0.13 . \
       && cd -
 
 ## Changing the container behaviour on runtime through environment variables

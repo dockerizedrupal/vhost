@@ -1,4 +1,4 @@
-<% if @http_basic_auth_password and !@http_basic_auth_password.empty? -%>
+<% if @http_basic_auth == "On" -%>
   auth_basic "Authentication Required";
   auth_basic_user_file "/etc/htpasswd/.htpasswd";
 <% end -%>
@@ -32,26 +32,30 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
   {{ range $container := $containers }}
     {{ range $address := $container.Addresses }}
       {{ if eq $address.Port "80" }}
-        {{ if ($container.Env.VHOST_PRIMARY_SERVICE) and (eq $container.Env.VHOST_PRIMARY_SERVICE "True") }}
-          upstream {{ $vhost_project_name }} {
-             server {{ $address.IP }}:{{ $address.Port }};
-          }
-
-          server {
-            listen 80;
-            server_name {{ $vhost_project_name }}.<%= @server_name %>;
-
-            location / {
-              {{ if ($container.Env.VHOST_HTTP_BASIC_AUTH) and (eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off") }}
-                auth_basic off;
-              {{ else if $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}
-                auth_basic "Authentication Required";
-                auth_basic_user_file "/etc/htpasswd/containers/{{ $vhost_project_name }}.{{ $container.Env.VHOST_SERVICE_NAME }}.htpasswd";
-              {{ end }}
-
-              proxy_pass http://{{ $vhost_project_name }};
+        {{ if $container.Env.VHOST_PRIMARY_SERVICE }}
+          {{ if eq $container.Env.VHOST_PRIMARY_SERVICE "True" }}
+            upstream {{ $vhost_project_name }} {
+               server {{ $address.IP }}:{{ $address.Port }};
             }
-          }
+
+            server {
+              listen 80;
+              server_name {{ $vhost_project_name }}.<%= @server_name %>;
+
+              location / {
+                {{ if $container.Env.VHOST_HTTP_BASIC_AUTH }}
+                  {{ if eq $container.Env.VHOST_HTTP_BASIC_AUTH "On" }}
+                    auth_basic "Authentication Required";
+                    auth_basic_user_file "/etc/htpasswd/containers/{{ $vhost_project_name }}.{{ $container.Env.VHOST_SERVICE_NAME }}.htpasswd";
+                  {{ else if eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off" }}
+                    auth_basic off;
+                  {{ end }}
+                {{ end }}
+
+                proxy_pass http://{{ $vhost_project_name }};
+              }
+            }
+          {{ end }}
         {{ end }}
 
         upstream {{ $container.Env.VHOST_SERVICE_NAME }}.{{ $vhost_project_name }} {
@@ -63,40 +67,46 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
           server_name {{ $container.Env.VHOST_SERVICE_NAME }}.{{ $vhost_project_name }}.<%= @server_name %>;
 
           location / {
-            {{ if ($container.Env.VHOST_HTTP_BASIC_AUTH) and (eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off") }}
-              auth_basic off;
-            {{ else if $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}
-              auth_basic "Authentication Required";
-              auth_basic_user_file "/etc/htpasswd/containers/{{ $vhost_project_name }}.{{ $container.Env.VHOST_SERVICE_NAME }}.htpasswd";
+            {{ if $container.Env.VHOST_HTTP_BASIC_AUTH }}
+              {{ if eq $container.Env.VHOST_HTTP_BASIC_AUTH "On" }}
+                auth_basic "Authentication Required";
+                auth_basic_user_file "/etc/htpasswd/containers/{{ $vhost_project_name }}.{{ $container.Env.VHOST_SERVICE_NAME }}.htpasswd";
+              {{ else if (eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off" }}
+                auth_basic off;
+              {{ end }}
             {{ end }}
 
             proxy_pass http://{{ $container.Env.VHOST_SERVICE_NAME }}.{{ $vhost_project_name }};
           }
         }
       {{ else if eq $address.Port "443" }}
-        {{ if ($container.Env.VHOST_PRIMARY_SERVICE) and (eq $container.Env.VHOST_PRIMARY_SERVICE "True") }}
-          upstream {{ $vhost_project_name }}.ssl {
-             server {{ $address.IP }}:{{ $address.Port }};
-          }
-
-          server {
-            listen 443 ssl;
-            server_name {{ $vhost_project_name }}.<%= @server_name %>;
-
-            ssl_certificate /vhost/ssl/certs/vhost_wildcard.crt;
-            ssl_certificate_key /vhost/ssl/private/vhost.key;
-
-            location / {
-              {{ if ($container.Env.VHOST_HTTP_BASIC_AUTH) and (eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off") }}
-                auth_basic off;
-              {{ else if $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}
-                auth_basic "Authentication Required";
-                auth_basic_user_file "/etc/htpasswd/containers/{{ $vhost_project_name }}.{{ $container.Env.VHOST_SERVICE_NAME }}.htpasswd";
-              {{ end }}
-
-              proxy_pass https://{{ $vhost_project_name }}.ssl;
+        {{ if $container.Env.VHOST_PRIMARY_SERVICE }}
+          {{ if eq $container.Env.VHOST_PRIMARY_SERVICE "True" }}
+            upstream {{ $vhost_project_name }}.ssl {
+               server {{ $address.IP }}:{{ $address.Port }};
             }
-          }
+
+            server {
+              listen 443 ssl;
+              server_name {{ $vhost_project_name }}.<%= @server_name %>;
+
+              ssl_certificate /vhost/ssl/certs/vhost_wildcard.crt;
+              ssl_certificate_key /vhost/ssl/private/vhost.key;
+
+              location / {
+                {{ if $container.Env.VHOST_HTTP_BASIC_AUTH }}
+                  {{ if eq $container.Env.VHOST_HTTP_BASIC_AUTH "On" }}
+                    auth_basic "Authentication Required";
+                    auth_basic_user_file "/etc/htpasswd/containers/{{ $vhost_project_name }}.{{ $container.Env.VHOST_SERVICE_NAME }}.htpasswd";
+                  {{ else if eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off" }}
+                    auth_basic off;
+                  {{ end }}
+                {{ end }}
+
+                proxy_pass https://{{ $vhost_project_name }}.ssl;
+              }
+            }
+          {{ end }}
         {{ end }}
 
         upstream {{ $container.Env.VHOST_SERVICE_NAME }}.{{ $vhost_project_name }}.ssl {
@@ -111,11 +121,13 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
           ssl_certificate_key /vhost/ssl/private/vhost.key;
 
           location / {
-            {{ if ($container.Env.VHOST_HTTP_BASIC_AUTH) and (eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off") }}
-              auth_basic off;
-            {{ else if $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}
-              auth_basic "Authentication Required";
-              auth_basic_user_file "/etc/htpasswd/containers/{{ $vhost_project_name }}.{{ $container.Env.VHOST_SERVICE_NAME }}.htpasswd";
+            {{ if $container.Env.VHOST_HTTP_BASIC_AUTH }}
+              {{ if eq $container.Env.VHOST_HTTP_BASIC_AUTH "On" }}
+                auth_basic "Authentication Required";
+                auth_basic_user_file "/etc/htpasswd/containers/{{ $vhost_project_name }}.{{ $container.Env.VHOST_SERVICE_NAME }}.htpasswd";
+              {{ else if eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off" }}
+                auth_basic off;
+              {{ end }}
             {{ end }}
 
             proxy_pass https://{{ $container.Env.VHOST_SERVICE_NAME }}.{{ $vhost_project_name }}.ssl;
@@ -139,11 +151,13 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
           server_name {{ $vhost_domain_aliases }};
 
           location / {
-            {{ if ($container.Env.VHOST_HTTP_BASIC_AUTH) and (eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off") }}
-              auth_basic off;
-            {{ else if $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}
-              auth_basic "Authentication Required";
-              auth_basic_user_file "/etc/htpasswd/containers/{{ $container.Env.VHOST_PROJECT_NAME }}.{{ $container.Env.VHOST_SERVICE_NAME }}.htpasswd";
+            {{ if $container.Env.VHOST_HTTP_BASIC_AUTH }}
+              {{ if eq $container.Env.VHOST_HTTP_BASIC_AUTH "On" }}
+                auth_basic "Authentication Required";
+                auth_basic_user_file "/etc/htpasswd/containers/{{ $container.Env.VHOST_PROJECT_NAME }}.{{ $container.Env.VHOST_SERVICE_NAME }}.htpasswd";
+              {{ else if eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off" }}
+                auth_basic off;
+              {{ end }}
             {{ end }}
 
             proxy_pass http://{{ $vhost_domain_aliases }};
@@ -159,11 +173,13 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
           server_name {{ $vhost_domain_aliases }};
 
           location / {
-            {{ if ($container.Env.VHOST_HTTP_BASIC_AUTH) and (eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off") }}
-              auth_basic off;
-            {{ else if $container.Env.VHOST_HTTP_BASIC_AUTH_PASSWORD }}
-              auth_basic "Authentication Required";
-              auth_basic_user_file "/etc/htpasswd/containers/{{ $container.Env.VHOST_PROJECT_NAME }}.{{ $container.Env.VHOST_SERVICE_NAME }}.htpasswd";
+            {{ if $container.Env.VHOST_HTTP_BASIC_AUTH }}
+              {{ if eq $container.Env.VHOST_HTTP_BASIC_AUTH "On" }}
+                auth_basic "Authentication Required";
+                auth_basic_user_file "/etc/htpasswd/containers/{{ $container.Env.VHOST_PROJECT_NAME }}.{{ $container.Env.VHOST_SERVICE_NAME }}.htpasswd";
+              {{ else if eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off" }}
+                auth_basic off;
+              {{ end }}
             {{ end }}
 
             proxy_pass https://{{ $vhost_domain_aliases }}.ssl;

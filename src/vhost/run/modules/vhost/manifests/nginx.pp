@@ -1,11 +1,11 @@
 class vhost::nginx {
-  include vhost::nginx::timeout
+  include vhost::nginx::proxy_read_timeout
 
   if ! file_exists('/vhost/ssl/certs/vhost.crt') {
     require vhost::nginx::ssl
   }
 
-  if $http_basic_auth_password {
+  if $http_basic_auth == "On" {
     include vhost::nginx::http_basic_auth
   }
 

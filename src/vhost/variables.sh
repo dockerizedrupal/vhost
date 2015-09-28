@@ -12,14 +12,14 @@ fi
 
 export FACTER_TIMEZONE="${TIMEZONE}"
 
-if [ -z "${TIMEOUT}" ]; then
-  TIMEOUT="900"
+if [ -z "${PROXY_READ_TIMEOUT}" ]; then
+  PROXY_READ_TIMEOUT="900"
 fi
 
-export FACTER_TIMEOUT="${TIMEOUT}"
+export FACTER_PROXY_READ_TIMEOUT="${PROXY_READ_TIMEOUT}"
 
 if [ -z "${PROTOCOLS}" ]; then
-  PROTOCOLS="https"
+  PROTOCOLS="https,http"
 fi
 
 PROTOCOLS=$(echo "${PROTOCOLS}" | tr "," "\n")
@@ -33,6 +33,12 @@ for PROTOCOL in ${PROTOCOLS}; do
     export FACTER_HTTPS="1"
   fi
 done
+
+if [ -z "${HTTP_BASIC_AUTH}" ]; then
+  HTTP_BASIC_AUTH="Off"
+fi
+
+export FACTER_HTTP_BASIC_AUTH="${HTTP_BASIC_AUTH}"
 
 if [ -z "${HTTP_BASIC_AUTH_USERNAME}" ]; then
   HTTP_BASIC_AUTH_USERNAME="container"

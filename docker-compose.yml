@@ -1,5 +1,5 @@
 vhost:
-  image: dockerizedrupal/vhost:1.0.5
+  image: dockerizedrupal/vhost:1.0.13
   hostname: vhost
   restart: always
   ports:
@@ -13,12 +13,13 @@ vhost:
   environment:
     - SERVER_NAME=localhost
     - TIMEZONE=Etc/UTC
-    - TIMEOUT=900
+    - PROXY_READ_TIMEOUT=900
     - PROTOCOLS=https,http
+    - HTTP_BASIC_AUTH=Off
     - HTTP_BASIC_AUTH_USERNAME=container
     - HTTP_BASIC_AUTH_PASSWORD=
 vhost-data:
-  image: dockerizedrupal/data:1.0.3
+  image: dockerizedrupal/data:1.1.0
   hostname: vhost-data
   volumes:
     - /vhost
