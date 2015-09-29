@@ -50,6 +50,11 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
                   {{ else if eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off" }}
                     auth_basic off;
                   {{ end }}
+                {{ else }}
+                  <% if @http_basic_auth_random == "On" -%>
+                    auth_basic "Authentication Required";
+                    auth_basic_user_file "/etc/htpasswd/containers/{{ $vhost_project_name }}.htpasswd";
+                  <% end -%>
                 {{ end }}
 
                 proxy_pass http://{{ $vhost_project_name }};
@@ -74,6 +79,11 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
               {{ else if eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off" }}
                 auth_basic off;
               {{ end }}
+            {{ else }}
+              <% if @http_basic_auth_random == "On" -%>
+                auth_basic "Authentication Required";
+                auth_basic_user_file "/etc/htpasswd/containers/{{ $vhost_project_name }}.htpasswd";
+              <% end -%>
             {{ end }}
 
             proxy_pass http://{{ $container.Env.VHOST_SERVICE_NAME }}.{{ $vhost_project_name }};
@@ -101,6 +111,11 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
                   {{ else if eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off" }}
                     auth_basic off;
                   {{ end }}
+                {{ else }}
+                  <% if @http_basic_auth_random == "On" -%>
+                    auth_basic "Authentication Required";
+                    auth_basic_user_file "/etc/htpasswd/containers/{{ $vhost_project_name }}.htpasswd";
+                  <% end -%>
                 {{ end }}
 
                 proxy_pass https://{{ $vhost_project_name }}.ssl;
@@ -128,6 +143,11 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
               {{ else if eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off" }}
                 auth_basic off;
               {{ end }}
+            {{ else }}
+              <% if @http_basic_auth_random == "On" -%>
+                auth_basic "Authentication Required";
+                auth_basic_user_file "/etc/htpasswd/containers/{{ $vhost_project_name }}.htpasswd";
+              <% end -%>
             {{ end }}
 
             proxy_pass https://{{ $container.Env.VHOST_SERVICE_NAME }}.{{ $vhost_project_name }}.ssl;
@@ -158,6 +178,11 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
               {{ else if eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off" }}
                 auth_basic off;
               {{ end }}
+            {{ else }}
+              <% if @http_basic_auth_random == "On" -%>
+                auth_basic "Authentication Required";
+                auth_basic_user_file "/etc/htpasswd/containers/{{ $container.Env.VHOST_PROJECT_NAME }}.htpasswd";
+              <% end -%>
             {{ end }}
 
             proxy_pass http://{{ $vhost_domain_aliases }};

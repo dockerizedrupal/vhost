@@ -1,5 +1,9 @@
 <?php
 
+require_once __DIR__ . '/credentials.php';
+
+print_r($credentials);
+
 $vhost = array(
   'credentials' => array(),
   'projects' => array(),
@@ -39,6 +43,11 @@ $vhost['credentials']['password'] = '<%= @http_basic_auth_password %>';
           {{ else if eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off" }}
             $vhost['projects']['{{ $vhost_project_name }}']['credentials'] = 'Off';
           {{ end }}
+        {{ else }}
+          <% if @http_basic_auth_random == "On" -%>
+            $vhost['projects']['{{ $vhost_project_name }}']['credentials']['username'] = $credentials['{{ $vhost_project_name }}']['username'];
+            $vhost['projects']['{{ $vhost_project_name }}']['credentials']['password'] = $credentials['{{ $vhost_project_name }}']['password'];
+          <% end -%>
         {{ end }}
 
         {{ if $container.Env.VHOST_VERSION_FILE_URL }}
@@ -81,6 +90,11 @@ $vhost['credentials']['password'] = '<%= @http_basic_auth_password %>';
       {{ else if eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off" }}
         $vhost['projects']['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['credentials'] = 'Off';
       {{ end }}
+    {{ else }}
+      <% if @http_basic_auth_random == "On" -%>
+        $vhost['projects']['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['credentials']['username'] = $credentials['{{ $vhost_project_name }}']['username'];
+        $vhost['projects']['{{ $vhost_project_name }}']['services']['{{ $container.Env.VHOST_SERVICE_NAME }}']['credentials']['password'] = $credentials['{{ $vhost_project_name }}']['password'];
+      <% end -%>
     {{ end }}
 
     {{ if $container.Env.VHOST_VERSION_FILE_URL }}
@@ -117,6 +131,11 @@ $vhost['credentials']['password'] = '<%= @http_basic_auth_password %>';
           {{ else if eq $container.Env.VHOST_HTTP_BASIC_AUTH "Off" }}
             $vhost['projects']['{{ $container.Env.VHOST_PROJECT_NAME }}']['credentials'] = 'Off';
           {{ end }}
+        {{ else }}
+          <% if @http_basic_auth_random == "On" -%>
+            $vhost['projects']['{{ $container.Env.VHOST_PROJECT_NAME }}']['credentials']['username'] = $credentials['{{ $container.Env.VHOST_PROJECT_NAME }}']['username'];
+            $vhost['projects']['{{ $container.Env.VHOST_PROJECT_NAME }}']['credentials']['password'] = $credentials['{{ $container.Env.VHOST_PROJECT_NAME }}']['password'];
+          <% end -%>
         {{ end }}
 
         {{ range $address := $container.Addresses }}

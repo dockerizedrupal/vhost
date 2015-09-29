@@ -4,3 +4,15 @@ server {
 
   return 301 https://$host$request_uri;
 }
+
+<% scope.to_hash.keys.each do |variable| -%>
+<% if (variable =~ /^server_alias_[[:digit:]]$/) -%>
+<% i = variable.split('_')[2].split('=')[0] -%>
+server {
+  listen 80;
+  server_name <%= eval("@server_alias_#{i}") %>;
+
+  return 301 https://$host$request_uri;
+}
+<% end -%>
+<% end -%>

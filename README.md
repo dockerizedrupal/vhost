@@ -22,22 +22,27 @@ This project is part of the [Dockerized Drupal](https://dockerizedrupal.com/) in
       -v /var/run/docker.sock:/var/run/docker.sock \
       -v /etc/hosts:/hosts \
       -e SERVER_NAME="localhost" \
+      -e SERVER_ALIAS_1="localhost" \
       -e TIMEZONE="Etc/UTC" \
       -e PROXY_READ_TIMEOUT="900" \
       -e PROTOCOLS="https,http" \
       -e HTTP_BASIC_AUTH="Off" \
       -e HTTP_BASIC_AUTH_USERNAME="container" \
       -e HTTP_BASIC_AUTH_PASSWORD="" \
+      -e HTTP_BASIC_AUTH_RANDOM="Off" \
+      -e HTTP_BASIC_AUTH_RANDOM_PASSWORD_LENGTH="32" \
+      -e HTTP_BASIC_AUTH_RANDOM_PASSWORD_SALT="" \
+      -e HOSTS_IP_ADDRESS="127.0.0.1" \
       -d \
-      dockerizedrupal/vhost:1.0.13
+      dockerizedrupal/vhost:1.0.14
 
 ## Build the image
 
     TMP="$(mktemp -d)" \
       && git clone https://github.com/dockerizedrupal/vhost.git "${TMP}" \
       && cd "${TMP}" \
-      && git checkout 1.0.13 \
-      && sudo docker build -t dockerizedrupal/vhost:1.0.13 . \
+      && git checkout 1.0.14 \
+      && sudo docker build -t dockerizedrupal/vhost:1.0.14 . \
       && cd -
 
 ## Changing the container behaviour on runtime through environment variables

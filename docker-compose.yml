@@ -1,5 +1,5 @@
 vhost:
-  image: dockerizedrupal/vhost:1.0.13
+  image: dockerizedrupal/vhost:1.0.12
   hostname: vhost
   restart: always
   ports:
@@ -12,12 +12,17 @@ vhost:
     - /etc/hosts:/hosts
   environment:
     - SERVER_NAME=localhost
+    - SERVER_ALIAS_1=localhost
     - TIMEZONE=Etc/UTC
     - PROXY_READ_TIMEOUT=900
     - PROTOCOLS=https,http
-    - HTTP_BASIC_AUTH=Off
+    - HTTP_BASIC_AUTH=Random
     - HTTP_BASIC_AUTH_USERNAME=container
     - HTTP_BASIC_AUTH_PASSWORD=
+    - HTTP_BASIC_AUTH_RANDOM=Off
+    - HTTP_BASIC_AUTH_RANDOM_PASSWORD_LENGTH=32
+    - HTTP_BASIC_AUTH_RANDOM_PASSWORD_SALT=
+    - HOSTS_IP_ADDRESS=127.0.0.1
 vhost-data:
   image: dockerizedrupal/data:1.1.0
   hostname: vhost-data

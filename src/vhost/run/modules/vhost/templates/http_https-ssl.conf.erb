@@ -30,3 +30,41 @@ server {
     }
   }
 }
+
+<% scope.to_hash.keys.each do |variable| -%>
+<% if (variable =~ /^server_alias_[[:digit:]]$/) -%>
+<% i = variable.split('_')[2].split('=')[0] -%>
+server {
+  listen 443 ssl;
+  server_name <%= eval("@server_alias_#{i}") %>;
+
+  ssl_certificate /vhost/ssl/certs/vhost.crt;
+  ssl_certificate_key /vhost/ssl/private/vhost.key;
+
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+  ssl_ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS;
+
+  ssl_prefer_server_ciphers on;
+
+  ssl_session_cache shared:SSL:20m;
+
+  ssl_session_timeout 10m;
+
+  root /var/www;
+
+  location / {
+    index index.php;
+
+    try_files $uri $uri/ =404;
+
+    location ~ index\.php {
+      include fastcgi_params;
+
+      fastcgi_pass unix:/var/run/php5-fpm.sock;
+
+      fastcgi_param SCRIPT_FILENAME /var/www/index.php;
+    }
+  }
+}
+<% end -%>
+<% end -%>
