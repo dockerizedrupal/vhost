@@ -63,7 +63,7 @@ function projects($vhost) {
     <div class="tab-content">
       <?php foreach ($vhost['projects'] as $project_name => $project): ?>
         <div class="tab-pane" id="<?php print html_class($project_name); ?>">
-          <?php if isset($project['service_name']) && $project['service_name']; ?>
+          <?php if (isset($project['service_name']) && $project['service_name']): ?>
             <div class="row">
               <div class="col-md-12">
                 <h2><i class="fa fa-cube"></i> <?php print $project['project_name']; ?></h2>
