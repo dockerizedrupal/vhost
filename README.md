@@ -19,7 +19,7 @@ This project is part of the [Dockerized Drupal](https://dockerizedrupal.com/) in
       -p 80:80 \
       -p 443:443 \
       --volumes-from vhost-data \
-      -v /var/run/docker.sock:/var/run/docker.sock \
+      -v /var/run/docker.sock:/var/run/docker.sock:ro \
       -v /etc/hosts:/hosts \
       -e SERVER_NAME="localhost" \
       -e SERVER_ALIAS_1="localhost" \
@@ -34,15 +34,15 @@ This project is part of the [Dockerized Drupal](https://dockerizedrupal.com/) in
       -e HTTP_BASIC_AUTH_RANDOM_PASSWORD_LENGTH="32" \
       -e HTTP_BASIC_AUTH_RANDOM_PASSWORD_SALT="" \
       -d \
-      dockerizedrupal/vhost:1.1.1
+      dockerizedrupal/vhost:1.1.2
 
 ## Build the image
 
     TMP="$(mktemp -d)" \
       && git clone https://github.com/dockerizedrupal/vhost.git "${TMP}" \
       && cd "${TMP}" \
-      && git checkout 1.1.1 \
-      && sudo docker build -t dockerizedrupal/vhost:1.1.1 . \
+      && git checkout 1.1.2 \
+      && sudo docker build -t dockerizedrupal/vhost:1.1.2 . \
       && cd -
 
 ## Changing the container behaviour on runtime through environment variables

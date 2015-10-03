@@ -1,5 +1,5 @@
 vhost:
-  image: dockerizedrupal/vhost:1.1.1
+  image: dockerizedrupal/vhost:1.1.2
   hostname: vhost
   restart: always
   ports:
@@ -8,7 +8,7 @@ vhost:
   volumes_from:
     - vhost-data
   volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
+    - /var/run/docker.sock:/var/run/docker.sock:ro
     - /etc/hosts:/hosts
   environment:
     - SERVER_NAME=localhost
