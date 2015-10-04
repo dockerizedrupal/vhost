@@ -7,7 +7,7 @@ fi
 export FACTER_SERVER_NAME="${SERVER_NAME}"
 
 for VARIABLE in $(env); do
-  if [[ "${VARIABLE}" =~ ^SERVER_ALIAS_[[:digit:]]=.*$ ]]; then
+  if [[ "${VARIABLE}" =~ ^SERVER_ALIAS_[[:digit:]]+=.*$ ]]; then
     i="$(echo ${VARIABLE} | awk -F '_' '{ print $3 }' | awk -F '=' '{ print $1 }')"
 
     SERVER_ALIAS="SERVER_ALIAS_${i}"
@@ -81,4 +81,3 @@ if [ -z "${HOSTS_IP_ADDRESS}" ]; then
 fi
 
 export FACTER_HOSTS_IP_ADDRESS="${HOSTS_IP_ADDRESS}"
-
