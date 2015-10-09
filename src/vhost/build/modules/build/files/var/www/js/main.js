@@ -71,7 +71,18 @@
       filter();
     });
 
-    $('.nav-pills a').first().trigger('click');
+    var active_project = $.localStorage.get('active_project');
+
+    if (active_project && $('.nav-pills a.' + active_project).length) {
+      $('.nav-pills a.' + active_project).first().trigger('click');
+    }
+    else {
+      $('.nav-pills a').first().trigger('click');
+    }
+
+    $('.nav-pills a').on('click', function() {
+      $.localStorage.set('active_project', $(this).data('project_name'));
+    });
 
     $('[data-toggle="tooltip"]').tooltip();
   });
