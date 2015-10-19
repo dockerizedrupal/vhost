@@ -15,7 +15,7 @@ echo '<%= @hosts_ip_address %> <%= @server_name %> # This entry has been added a
 {{ range $vhost_project_name, $containers := groupByMulti $ "Env.VHOST_PROJECT_NAME" "," }}
   {{ range $container := $containers }}
     {{ if $container.Env.VHOST_PRIMARY_SERVICE }}
-      {{ if eq $container.Env.VHOST_PRIMARY_SERVICE "Yes" }}
+      {{ if eq $container.Env.VHOST_PRIMARY_SERVICE "True" }}
         echo '<%= @hosts_ip_address %> {{ $vhost_project_name }}.<%= @server_name %> # This entry has been added automatically by vhost' >> "${HOSTS_FILE}"
       {{ end }}
     {{ end }}
