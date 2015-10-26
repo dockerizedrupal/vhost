@@ -31,7 +31,7 @@ echo '<%= @hosts_ip_address %> <%= @server_name %> # This entry has been added a
 {{ end }}
 
 for VARIABLE in $(env); do
-  if [[ "${VARIABLE}" =~ ^SERVER_ALIAS_[[:digit:]]=.*$ ]]; then
+  if [[ "${VARIABLE}" =~ ^SERVER_ALIAS_[[:digit:]]+=.*$ ]]; then
     i="$(echo ${VARIABLE} | awk -F '_' '{ print $3 }' | awk -F '=' '{ print $1 }')"
 
     SERVER_ALIAS="SERVER_ALIAS_${i}"
