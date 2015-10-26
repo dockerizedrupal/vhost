@@ -34,15 +34,15 @@ This project is part of the [Dockerized Drupal](https://dockerizedrupal.com/) in
       -e HTTP_BASIC_AUTH_RANDOM_PASSWORD_LENGTH="32" \
       -e HTTP_BASIC_AUTH_RANDOM_PASSWORD_SALT="" \
       -d \
-      dockerizedrupal/vhost:1.1.5
+      dockerizedrupal/vhost:1.1.6
 
 ## Build the image
 
     TMP="$(mktemp -d)" \
       && git clone https://github.com/dockerizedrupal/vhost.git "${TMP}" \
       && cd "${TMP}" \
-      && git checkout 1.1.5 \
-      && sudo docker build -t dockerizedrupal/vhost:1.1.5 . \
+      && git checkout 1.1.6 \
+      && sudo docker build -t dockerizedrupal/vhost:1.1.6 . \
       && cd -
 
 ## Changing the container behaviour on runtime through environment variables

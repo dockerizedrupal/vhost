@@ -1,5 +1,5 @@
 vhost:
-  image: dockerizedrupal/vhost:1.1.5
+  image: dockerizedrupal/vhost:1.1.6
   hostname: vhost
   restart: always
   ports:
