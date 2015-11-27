@@ -1,5 +1,5 @@
 vhost:
-  image: dockerizedrupal/vhost:1.1.6
+  image: dockerizedrupal/vhost:1.1.7
   hostname: vhost
   restart: always
   ports:
@@ -24,7 +24,8 @@ vhost:
     - HTTP_BASIC_AUTH_RANDOM_PASSWORD_LENGTH=32
     - HTTP_BASIC_AUTH_RANDOM_PASSWORD_SALT=
 vhost-data:
-  image: dockerizedrupal/data:1.1.0
+  image: dockerizedrupal/vhost:1.1.7
   hostname: vhost-data
+  entrypoint: ["/bin/echo", "Data-only container for vhost."]
   volumes:
     - /vhost
