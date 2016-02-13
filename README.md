@@ -1,8 +1,8 @@
+> **Notice:** *This project is part of the [Dockerized Drupal](https://dockerizedrupal.com/) initiative.*
+
 # vhost
 
 The front page of your development environment.
-
-This project is part of the [Dockerized Drupal](https://dockerizedrupal.com/) initiative.
 
 ## Run the container
 
