@@ -8,3 +8,6 @@ VERSION.md
 Gruntfile.js
 package.json
 node_modules
+Vagrantfile
+.vagrant
+package.box

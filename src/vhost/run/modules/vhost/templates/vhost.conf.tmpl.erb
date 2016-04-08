@@ -35,7 +35,7 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
         {{ if $container.Env.VHOST_PRIMARY_SERVICE }}
           {{ if eq $container.Env.VHOST_PRIMARY_SERVICE "True" }}
             upstream {{ $vhost_project_name }} {
-              server {{ $address.IP }}:{{ $address.Port }};
+              server {{ $address.IP }}:{{ $address.Port }} max_fails=0;
             }
 
             server {
@@ -64,7 +64,7 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
         {{ end }}
 
         upstream {{ $container.Env.VHOST_SERVICE_NAME }}.{{ $vhost_project_name }} {
-          server {{ $address.IP }}:{{ $address.Port }};
+          server {{ $address.IP }}:{{ $address.Port }} max_fails=0;
         }
 
         server {
@@ -93,7 +93,7 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
         {{ if $container.Env.VHOST_PRIMARY_SERVICE }}
           {{ if eq $container.Env.VHOST_PRIMARY_SERVICE "True" }}
             upstream {{ $vhost_project_name }}.ssl {
-              server {{ $address.IP }}:{{ $address.Port }};
+              server {{ $address.IP }}:{{ $address.Port }} max_fails=0;
             }
 
             server {
@@ -125,7 +125,7 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
         {{ end }}
 
         upstream {{ $container.Env.VHOST_SERVICE_NAME }}.{{ $vhost_project_name }}.ssl {
-          server {{ $address.IP }}:{{ $address.Port }};
+          server {{ $address.IP }}:{{ $address.Port }} max_fails=0;
         }
 
         server {
@@ -163,7 +163,7 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
     {{ range $address := $container.Addresses }}
       {{ if eq $address.Port "80" }}
         upstream {{ $vhost_domain_aliases }} {
-          server {{ $address.IP }}:{{ $address.Port }};
+          server {{ $address.IP }}:{{ $address.Port }} max_fails=0;
         }
 
         server {
@@ -190,7 +190,7 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
         }
       {{ else if eq $address.Port "443" }}
         upstream {{ $vhost_domain_aliases }}.ssl {
-          server {{ $address.IP }}:{{ $address.Port }};
+          server {{ $address.IP }}:{{ $address.Port }} max_fails=0;
         }
 
         server {

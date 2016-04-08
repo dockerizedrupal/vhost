@@ -1,5 +1,5 @@
-var current_version = '1.1.6';
-var new_version = '1.1.7';
+var current_version = '1.1.7';
+var new_version = '1.1.8';
 
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-replace');
@@ -98,6 +98,25 @@ module.exports = function(grunt) {
             expand: true,
             src: [
               'src/vhost/run/modules/vhost/templates/index.php.erb'
+            ]
+          }
+        ]
+      },
+      task6: {
+        options: {
+          patterns: [
+            {
+              match: 'VERSION = "' + current_version + '"',
+              replacement: 'VERSION = "' + new_version + '"'
+            }
+          ],
+          usePrefix: false
+        },
+        files: [
+          {
+            expand: true,
+            src: [
+              'Vagrantfile'
             ]
           }
         ]
