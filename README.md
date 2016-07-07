@@ -11,7 +11,7 @@ The front page of your development environment.
       -h "${CONTAINER}" \
       --entrypoint /bin/echo \
       -v /vhost \
-      dockerizedrupal/vhost:1.1.8 "Data-only container for vhost."
+      dockerizedrupal/vhost:1.1.9 "Data-only container for vhost."
  
     CONTAINER="vhost" && sudo docker run \
       --name "${CONTAINER}" \
@@ -35,15 +35,15 @@ The front page of your development environment.
       -e HTTP_BASIC_AUTH_RANDOM_PASSWORD_LENGTH="32" \
       -e HTTP_BASIC_AUTH_RANDOM_PASSWORD_SALT="" \
       -d \
-      dockerizedrupal/vhost:1.1.8
+      dockerizedrupal/vhost:1.1.9
 
 ## Build the image
 
     TMP="$(mktemp -d)" \
       && git clone https://github.com/dockerizedrupal/vhost.git "${TMP}" \
       && cd "${TMP}" \
-      && git checkout 1.1.8 \
-      && sudo docker build -t dockerizedrupal/vhost:1.1.8 . \
+      && git checkout 1.1.9 \
+      && sudo docker build -t dockerizedrupal/vhost:1.1.9 . \
       && cd -
 
 ## Changing the container behaviour on runtime through environment variables
