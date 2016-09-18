@@ -1,8 +1,6 @@
-> **Notice:** *This project is part of the [Dockerized Drupal](https://dockerizedrupal.com/) initiative.*
-
 # vhost
 
-The front page of your development environment.
+The front page of your Drupal development environment.
 
 ## Run the container
 
@@ -11,7 +9,7 @@ The front page of your development environment.
       -h "${CONTAINER}" \
       --entrypoint /bin/echo \
       -v /vhost \
-      dockerizedrupal/vhost:1.1.9 "Data-only container for vhost."
+      dockerizedrupal/vhost:2.0.0 "Data-only container for vhost."
  
     CONTAINER="vhost" && sudo docker run \
       --name "${CONTAINER}" \
@@ -35,20 +33,16 @@ The front page of your development environment.
       -e HTTP_BASIC_AUTH_RANDOM_PASSWORD_LENGTH="32" \
       -e HTTP_BASIC_AUTH_RANDOM_PASSWORD_SALT="" \
       -d \
-      dockerizedrupal/vhost:1.1.9
+      dockerizedrupal/vhost:2.0.0
 
 ## Build the image
 
     TMP="$(mktemp -d)" \
       && git clone https://github.com/dockerizedrupal/vhost.git "${TMP}" \
       && cd "${TMP}" \
-      && git checkout 1.1.9 \
-      && sudo docker build -t dockerizedrupal/vhost:1.1.9 . \
+      && git checkout 2.0.0 \
+      && sudo docker build -t dockerizedrupal/vhost:2.0.0 . \
       && cd -
-
-## Changing the container behaviour on runtime through environment variables
-
-    // TODO
 
 ## License
 
